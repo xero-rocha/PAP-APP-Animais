@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Animais</title>
+    <style>
+        :root {
+            --color-primary: #2180a1;
+            --color-primary-dark: #1a6a8c;
+            --color-bg: #f5f5f5;
+            --color-sidebar: #2c3e50;
+            --color-text: #333;
+            --color-border: #ddd;
+            --color-hover: #ecf0f1;
+            --color-success: #27ae60;
+            --color-warning: #f39c12;
+            --color-danger: #e74c3c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--color-sidebar);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu-item:hover { background-color: rgba(255,255,255,0.1); }
+        .menu-item.active { background-color: var(--color-primary); }
+
+        .main-content { margin-left: 260px; flex: 1; padding: 30px; }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: var(--color-primary); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .stat-card .number { font-size: 32px; font-weight: bold; color: var(--color-primary); }
+
+        .table-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        table th {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        table td { padding: 12px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+        table tr:hover { background-color: var(--color-hover); }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary { background-color: var(--color-primary); color: white; }
+        .btn-primary:hover { background-color: var(--color-primary-dark); }
+        .btn-success { background-color: var(--color-success); color: white; }
+        .btn-success:hover { background-color: #229954; }
+        .btn-warning { background-color: var(--color-warning); color: white; }
+        .btn-warning:hover { background-color: #d68910; }
+        .btn-danger { background-color: var(--color-danger); color: white; }
+        .btn-danger:hover { background-color: #cb4335; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-small { padding: 5px 10px; font-size: 12px; margin-right: 3px; margin-bottom: 2px; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            overflow-y: auto;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 30px auto;
+            border-radius: 8px;
+            max-width: 950px;
+            width: 92%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 18px 22px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { margin: 0; font-size: 18px; }
+        .close { color: white; font-size: 26px; font-weight: bold; cursor: pointer; line-height: 1; }
+        .close:hover { color: #ddd; }
+
+        .modal-body {
+            padding: 22px;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+        .modal-footer {
+            padding: 16px 22px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 13px;
+            margin-bottom: 10px;
+        }
+        .form-group { margin-bottom: 13px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--color-text);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .form-group input.input-error,
+        .form-group select.input-error,
+        .form-group textarea.input-error {
+            border-color: var(--color-danger);
+        }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+
+        .form-section {
+            background-color: #f9f9f9;
+            padding: 16px 18px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--color-primary);
+        }
+        .form-section h3 {
+            margin-bottom: 13px;
+            color: var(--color-primary);
+            font-size: 15px;
+        }
+
+        .search-bar { margin-bottom: 18px; }
+        .search-bar input {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-success { background-color: #d4edda; color: #155724; }
+        .badge-warning { background-color: #fff3cd; color: #856404; }
+        .badge-danger  { background-color: #f8d7da; color: #721c24; }
+        .badge-info    { background-color: #cce5ff; color: #004085; }
+
+        .hidden { display: none !important; }
+
+        .vaccine-entry {
+            display: grid;
+            grid-template-columns: 1fr 160px auto;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: end;
+        }
+        .vaccine-entry .form-group { margin-bottom: 0; }
+        .btn-add-vaccine {
+            background-color: var(--color-success);
+            color: white;
+            padding: 7px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        .btn-remove {
+            background-color: var(--color-danger);
+            color: white;
+            padding: 7px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .animal-search-wrapper { position: relative; }
+        .animal-search-results {
+            position: absolute;
+            background-color: white;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 200;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .animal-search-item {
+            padding: 9px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 13px;
+        }
+        .animal-search-item:hover { background-color: var(--color-hover); }
+        .animal-search-item strong { color: var(--color-primary); }
+
+        .toggle-switch { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .3s; border-radius: 22px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--color-primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .info-item {
+            padding: 10px 12px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .info-item strong { color: var(--color-primary); display: block; margin-bottom: 3px; }
+
+        /* Notification toast */
+        #toast {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            padding: 14px 22px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        #toast.show { opacity: 1; }
+        #toast.toast-success { background-color: var(--color-success); }
+        #toast.toast-error   { background-color: var(--color-danger); }
+        #toast.toast-warning { background-color: var(--color-warning); }
+    </style>
+</head>
+
+<body>
+<div id="toast"></div>
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">🐾 Gestão de Animais</div>
+        <div class="menu-item active" onclick="showSection('dashboard', this)"> Dashboard</div>
+        <div class="menu-item" onclick="showSection('animals', this)"> Gestão de Animais</div>
+        <div class="menu-item" onclick="showSection('colonies', this)"> Gestão de Colónias</div>
+        <div class="menu-item" onclick="showSection('adoptions', this)"> Controlo de Adoções</div>
+        <div class="menu-item" onclick="showSection('reports', this)"> Relatórios</div>
+        <div class="menu-item" onclick="showSection('settings', this)"> Configurações</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="section">
+            <div class="header"><h1>Dashboard</h1></div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total de Animais</h3>
+                    <div class="number" id="totalAnimals">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Animais em Colónia</h3>
+                    <div class="number" id="colonyAnimals">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Animais Esterilizados</h3>
+                    <div class="number" id="sterilizedAnimals">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Adoções Realizadas</h3>
+                    <div class="number" id="adoptionsCount">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animals -->
+        <div id="animals" class="section hidden">
+            <div class="header">
+                <h1>Gestão de Animais</h1>
+                <button class="btn btn-primary" onclick="openAddAnimalModal()">+ Adicionar Animal</button>
+            </div>
+            <div class="table-container">
+                <div class="search-bar">
+                    <input type="text" id="searchAnimals" placeholder="Pesquisar por nome, microchip ou proprietário..." oninput="filterAnimals()">
+                </div>
+                <table id="animalsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Espécie</th>
+                            <th>Microchip</th>
+                            <th>Colónia</th>
+                            <th>Proprietário</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" style="text-align:center;">Nenhum animal registado</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Colonies -->
+        <div id="colonies" class="section hidden">
+            <div class="header">
+                <h1>Gestão de Colónias</h1>
+                <button class="btn btn-primary" onclick="openAddColonyModal()">+ Adicionar Colónia</button>
+            </div>
+            <div class="table-container">
+                <table id="coloniesTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Zona</th>
+                            <th>Nº Animais</th>
+                            <th>Responsável</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="text-align:center;">Nenhuma colónia registada</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Adoptions -->
+        <div id="adoptions" class="section hidden">
+            <div class="header">
+                <h1>Controlo de Adoções</h1>
+                <button class="btn btn-primary" onclick="openAddAdoptionModal()">+ Registar Adoção</button>
+            </div>
+            <div class="table-container">
+                <table id="adoptionsTable">
+                    <thead>
+                        <tr>
+                            <th>Animal</th>
+                            <th>Data Adoção</th>
+                            <th>Adotante</th>
+                            <th>Contacto</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" style="text-align:center;">Nenhuma adoção registada</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports -->
+        <div id="reports" class="section hidden">
+            <div class="header"><h1>Relatórios e Estatísticas</h1></div>
+            <div class="table-container">
+                <h3 style="margin-bottom:15px;">Gerar Relatório</h3>
+                <div class="form-group">
+                    <label>Tipo de Relatório</label>
+                    <select id="reportType">
+                        <option>Animais por Status</option>
+                        <option>Adoções por Período</option>
+                        <option>Colónias Ativas</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="generateReport()">Gerar</button>
+                <div id="reportOutput" style="margin-top:20px;"></div>
+            </div>
+            <div class="stats-grid" style="margin-top:20px;">
+                <div class="stat-card">
+                    <h3>Total de Animais</h3>
+                    <div class="number" id="reportTotalAnimals">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Animais Esterilizados</h3>
+                    <div class="number" id="reportSterilized">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Adoções Concluídas</h3>
+                    <div class="number" id="reportAdoptions">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="section hidden">
+            <div class="header"><h1>Configurações</h1></div>
+            <div class="table-container">
+                <h3 style="margin-bottom:15px;">Informações do Sistema</h3>
+                <p><strong>Versão:</strong> 0.4.0</p>
+                <p><strong>Última Atualização:</strong> 18/02/2026</p>
+                <p><strong>Desenvolvido por:</strong> Francisco Rocha</p>
+            </div>
+        </div>
+
+    </div><!-- /main-content -->
+</div><!-- /container -->
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Adicionar / Editar Animal                             -->
+<!-- ============================================================ -->
+<div id="animalModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="animalModalTitle">Adicionar Animal</h2>
+            <span class="close" onclick="closeAnimalModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="animalForm" onsubmit="return false;">
+                <input type="hidden" id="animalId">
+
+                <div class="form-section">
+                    <h3>Informação Básica</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome *</label>
+                            <input type="text" id="animalName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Espécie *</label>
+                            <select id="animalSpecies" required>
+                                <option value="">Selecione...</option>
+                                <option value="Cão">Cão</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo *</label>
+                            <select id="animalSex" required>
+                                <option value="">Selecione...</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Fêmea">Fêmea</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="animalBirthDate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Características Físicas</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Cor</label>
+                            <input type="text" id="animalColor">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Pelo</label>
+                            <input type="text" id="animalFurType">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Identificação e Saúde</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Microchip</label>
+                            <input type="text" id="animalMicrochip" placeholder="Número do microchip">
+                        </div>
+                        <div class="form-group">
+                            <label>Esterilizado/Castrado</label>
+                            <select id="animalSterilized">
+                                <option value="">Não especificado</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Comportamento</label>
+                        <textarea id="animalBehavior" placeholder="Descreva o comportamento do animal"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Vacinas</h3>
+                    <button type="button" class="btn-add-vaccine" onclick="addVaccineField('vaccinesList')">+ Adicionar Vacina</button>
+                    <div id="vaccinesList"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Informações Veterinárias</h3>
+                    <div class="form-group">
+                        <label>Boletim Sanitário</label>
+                        <textarea id="animalHealthBulletin" placeholder="Informações do boletim sanitário"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Histórico Veterinário</label>
+                        <textarea id="animalVetHistory" placeholder="Histórico de consultas e tratamentos veterinários"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Proprietário / Localização / Colónia</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Proprietário</label>
+                            <input type="text" id="animalOwner">
+                        </div>
+                        <div class="form-group">
+                            <label>Colónia</label>
+                            <select id="animalColonyId">
+                                <option value="">Sem colónia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Local de Albergue</label>
+                        <input type="text" id="animalLocation" placeholder="Onde o animal se encontra antes da adoção">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="saveAnimal()">Guardar</button>
+            <button class="btn btn-secondary" onclick="closeAnimalModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Adicionar Colónia                                     -->
+<!-- ============================================================ -->
+<div id="colonyModal" class="modal">
+    <div class="modal-content" style="max-width:600px;">
+        <div class="modal-header">
+            <h2>Adicionar Colónia</h2>
+            <span class="close" onclick="closeColonyModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="colonyForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label>Nome da Colónia *</label>
+                    <input type="text" id="colonyName" required>
+                </div>
+                <div class="form-group">
+                    <label>Zona *</label>
+                    <input type="text" id="colonyZone" required>
+                </div>
+                <div class="form-group">
+                    <label>Responsável</label>
+                    <input type="text" id="colonyResponsible">
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="colonyNotes"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="saveColony()">Guardar</button>
+            <button class="btn btn-secondary" onclick="closeColonyModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Adoção (Termo de Responsabilidade)                    -->
+<!-- ============================================================ -->
+<div id="adoptionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Termo de Responsabilidade — Adoção</h2>
+            <span class="close" onclick="closeAdoptionModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="adoptionForm" onsubmit="return false;">
+                <input type="hidden" id="adoptionId">
+
+                <!-- DADOS DO ADOTANTE -->
+                <div class="form-section">
+                    <h3>Dados do Adotante</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome *</label>
+                            <input type="text" id="adopterName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº BI *</label>
+                            <input type="text" id="adopterBI" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº Contribuinte *</label>
+                            <input type="text" id="adopterNIF" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone *</label>
+                            <input type="tel" id="adopterPhone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Morada *</label>
+                        <input type="text" id="adopterAddress" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Código Postal * (0000-000)</label>
+                            <input type="text" id="adopterPostalCode" placeholder="0000-000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Freguesia *</label>
+                            <input type="text" id="adopterParish" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Município *</label>
+                            <input type="text" id="adopterMunicipality" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="adopterEmail">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARACTERÍSTICAS DO ANIMAL -->
+                <div class="form-section">
+                    <h3>Características do Animal</h3>
+
+                    <div class="toggle-switch">
+                        <label class="switch">
+                            <input type="checkbox" id="useExistingAnimal" onchange="toggleAnimalSearch()">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="useExistingAnimal" style="cursor:pointer;">Preencher com animal existente</label>
+                    </div>
+
+                    <div id="animalSearchSection" class="hidden">
+                        <div class="form-group animal-search-wrapper">
+                            <label>Pesquisar por Microchip ou Nome</label>
+                            <input type="text" id="searchMicrochip" oninput="searchAnimalByMicrochip()" placeholder="Digite microchip ou nome...">
+                            <div id="animalSearchResults" class="animal-search-results hidden"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome do Animal *</label>
+                            <input type="text" id="adoptionAnimalName">
+                        </div>
+                        <div class="form-group">
+                            <label>Espécie *</label>
+                            <input type="text" id="adoptionAnimalSpecies">
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo *</label>
+                            <select id="adoptionAnimalSex">
+                                <option value="">Selecione...</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Fêmea">Fêmea</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="adoptionAnimalBirthDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Cor</label>
+                            <input type="text" id="adoptionAnimalColor">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Pelo</label>
+                            <input type="text" id="adoptionAnimalFurType">
+                        </div>
+                        <div class="form-group">
+                            <label>Microchip</label>
+                            <input type="text" id="adoptionAnimalMicrochip">
+                        </div>
+                        <div class="form-group">
+                            <label>Esterilizado/Castrado</label>
+                            <select id="adoptionAnimalSterilized">
+                                <option value="">Não especificado</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Comportamento</label>
+                        <textarea id="adoptionAnimalBehavior"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Boletim Sanitário</label>
+                        <textarea id="adoptionAnimalHealthBulletin"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Histórico Veterinário</label>
+                        <textarea id="adoptionAnimalVetHistory"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Local de Albergue</label>
+                        <input type="text" id="adoptionAnimalLocation">
+                    </div>
+
+                    <div>
+                        <label style="font-weight:500;font-size:13px;display:block;margin-bottom:6px;">Vacinas</label>
+                        <button type="button" class="btn-add-vaccine" onclick="addVaccineField('adoptionVaccinesList')">+ Adicionar Vacina</button>
+                        <div id="adoptionVaccinesList"></div>
+                    </div>
+                </div>
+
+                <!-- INFORMAÇÕES DA ADOÇÃO -->
+                <div class="form-section">
+                    <h3>Informações da Adoção</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Data da Adoção *</label>
+                            <input type="date" id="adoptionDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Observações</label>
+                        <textarea id="adoptionNotes"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="saveAdoption()">Guardar Adoção</button>
+            <button class="btn btn-secondary" onclick="closeAdoptionModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Info do Animal                                        -->
+<!-- ============================================================ -->
+<div id="animalInfoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Informações do Animal</h2>
+            <span class="close" onclick="closeAnimalInfoModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="animalInfoContent"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeAnimalInfoModal()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Esterilização                                         -->
+<!-- ============================================================ -->
+<div id="sterilizationModal" class="modal">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="modal-header">
+            <h2>Registar Esterilização</h2>
+            <span class="close" onclick="closeSterilizationModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="sterilizationForm" onsubmit="return false;">
+                <input type="hidden" id="sterilizationAnimalId">
+                <div class="form-group">
+                    <label>Data da Esterilização *</label>
+                    <input type="date" id="sterilizationDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Veterinário Responsável</label>
+                    <input type="text" id="sterilizationVet">
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="sterilizationNotes"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="saveSterilization()">Guardar</button>
+            <button class="btn btn-secondary" onclick="closeSterilizationModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: Desparasitação                                        -->
+<!-- ============================================================ -->
+<div id="DesparasitacaoModal" class="modal">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="modal-header">
+            <h2>Registar Desparasitação</h2>
+            <span class="close" onclick="closeDesparasitacaoModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="DesparasitacaoForm" onsubmit="return false;">
+                <input type="hidden" id="DesparasitacaoAnimalId">
+                <div class="form-group">
+                    <label>Data da Desparasitação *</label>
+                    <input type="date" id="DesparasitacaoDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Produto Utilizado</label>
+                    <input type="text" id="DesparasitacaoProduct">
+                </div>
+                <div class="form-group">
+                    <label>Próxima Desparasitação</label>
+                    <input type="date" id="DesparasitacaoNextDate">
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="DesparasitacaoNotes"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="saveDesparasitacao()">Guardar</button>
+            <button class="btn btn-secondary" onclick="closeDesparasitacaoModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Info da Colónia -->
+<div id="colonyInfoModal" class="modal">
+    <div class="modal-content" style="max-width:800px;">
+        <div class="modal-header">
+            <h2 id="colonyInfoTitle">Informações da Colónia</h2>
+            <span class="close" onclick="closeColonyInfoModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="colonyInfoContent"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeColonyInfoModal()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT                                                   -->
+<!-- ============================================================ -->
+<script>
+    // ── DATA ──────────────────────────────────────────────────────
+    let animals   = JSON.parse(localStorage.getItem('animals'))   || [];
+    let colonies  = JSON.parse(localStorage.getItem('colonies'))  || [];
+    let adoptions = JSON.parse(localStorage.getItem('adoptions')) || [];
+
+    let editingAnimalId   = null;
+    let editingAdoptionId = null;
+    let vaccineCounter    = 0;
+
+    // ── INIT ──────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        updateDashboard();
+        renderAnimalsTable();
+        renderColoniesTable();
+        renderAdoptionsTable();
+    });
+
+    // ── TOAST ─────────────────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `show toast-${type}`;
+        setTimeout(() => { t.className = ''; }, 3000);
+    }
+
+    // ── NAVIGATION ────────────────────────────────────────────────
+    function showSection(sectionId, el) {
+        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+        document.getElementById(sectionId).classList.remove('hidden');
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        if (el) el.classList.add('active');
+    }
+
+    // ── PERSIST ───────────────────────────────────────────────────
+    function persist() {
+        localStorage.setItem('animals',   JSON.stringify(animals));
+        localStorage.setItem('colonies',  JSON.stringify(colonies));
+        localStorage.setItem('adoptions', JSON.stringify(adoptions));
+    }
+
+    // ── DASHBOARD ─────────────────────────────────────────────────
+    function updateDashboard() {
+        const total      = animals.length;
+        const inColony   = animals.filter(a => a.colonyId && a.colonyId !== '').length;
+        const sterilized = animals.filter(a => a.sterilized === 'Sim').length;
+        const adopted    = adoptions.length;
+
+        document.getElementById('totalAnimals').textContent    = total;
+        document.getElementById('colonyAnimals').textContent   = inColony;
+        document.getElementById('sterilizedAnimals').textContent = sterilized;
+        document.getElementById('adoptionsCount').textContent  = adopted;
+        document.getElementById('reportTotalAnimals').textContent = total;
+        document.getElementById('reportSterilized').textContent   = sterilized;
+        document.getElementById('reportAdoptions').textContent    = adopted;
+    }
+
+    // ── COLONY COUNT helper ───────────────────────────────────────
+    function countAnimalsInColony(colonyId) {
+        return animals.filter(a => a.colonyId === colonyId).length;
+    }
+
+    function getColonyName(colonyId) {
+        if (!colonyId) return '—';
+        const c = colonies.find(c => c.id === colonyId);
+        return c ? c.name : '—';
+    }
+
+    // ── VACCINE FIELDS ────────────────────────────────────────────
+    function addVaccineField(containerId, name = '', date = '') {
+        const container = document.getElementById(containerId);
+        const id = 'vac_' + (vaccineCounter++);
+        const div = document.createElement('div');
+        div.className = 'vaccine-entry';
+        div.id = id;
+        div.innerHTML = `
+            <div class="form-group">
+                <label>Nome da Vacina</label>
+                <input type="text" class="vaccine-name" value="${name}" placeholder="Ex: Raiva, Polivalente">
+            </div>
+            <div class="form-group">
+                <label>Data</label>
+                <input type="date" class="vaccine-date" value="${date}">
+            </div>
+            <button type="button" class="btn-remove" onclick="document.getElementById('${id}').remove()">✕ Remover</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function getVaccinesFromContainer(containerId) {
+        const vaccines = [];
+        document.querySelectorAll(`#${containerId} .vaccine-entry`).forEach(entry => {
+            const name = entry.querySelector('.vaccine-name').value.trim();
+            const date = entry.querySelector('.vaccine-date').value;
+            if (name || date) vaccines.push({ name, date });
+        });
+        return vaccines;
+    }
+
+    function loadVaccinesToContainer(containerId, vaccines) {
+        document.getElementById(containerId).innerHTML = '';
+        if (vaccines && vaccines.length > 0) {
+            vaccines.forEach(v => addVaccineField(containerId, v.name, v.date));
+        }
+    }
+
+    function viewColonyInfo(id) {
+    const c = colonies.find(x => x.id === id);
+    const animalsInColony = animals.filter(a => a.colonyId === id);
+
+    // Estatísticas rápidas
+    const total       = animalsInColony.length;
+    const machos      = animalsInColony.filter(a => a.sex === 'Macho').length;
+    const femeas      = animalsInColony.filter(a => a.sex === 'Fêmea').length;
+    const esteriliz   = animalsInColony.filter(a => a.sterilized === 'Sim').length;
+    const semMicrochip = animalsInColony.filter(a => !a.microchip).length;
+
+    // Tabela de animais
+    let animaisHTML = '';
+    if (animalsInColony.length === 0) {
+        animaisHTML = '<p style="color:#888;font-style:italic;">Nenhum animal associado a esta colónia.</p>';
+    } else {
+        animaisHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Espécie</th>
+                        <th>Sexo</th>
+                        <th>Microchip</th>
+                        <th>Esterilizado</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${animalsInColony.map(a => `
+                        <tr>
+                            <td>${a.name}</td>
+                            <td>${a.species}</td>
+                            <td>${a.sex}</td>
+                            <td>${a.microchip || '—'}</td>
+                            <td>${a.sterilized || '—'}</td>
+                            <td>
+                                <button class="btn btn-small btn-primary"
+                                    onclick="closeColonyInfoModal(); viewAnimalInfo('${a.id}')">
+                                    Ver Animal
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+//Info colonia
+    document.getElementById('colonyInfoTitle').textContent = `Colónia: ${c.name}`;
+    document.getElementById('colonyInfoContent').innerHTML = `
+        <!-- Dados da Colónia -->
+        <div class="info-grid" style="margin-bottom:20px;">
+            <div class="info-item"><strong>Nome</strong>${c.name}</div>
+            <div class="info-item"><strong>Zona</strong>${c.zone}</div>
+            <div class="info-item"><strong>Responsável</strong>${c.responsible || '—'}</div>
+            <div class="info-item"><strong>Observações</strong>${c.notes || '—'}</div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;">
+            <div class="stat-card" style="padding:15px;">
+                <h3>Total</h3>
+                <div class="number" style="font-size:24px;">${total}</div>
+            </div>
+            <div class="stat-card" style="padding:15px;">
+                <h3>Machos</h3>
+                <div class="number" style="font-size:24px;">${machos}</div>
+            </div>
+            <div class="stat-card" style="padding:15px;">
+                <h3>Fêmeas</h3>
+                <div class="number" style="font-size:24px;">${femeas}</div>
+            </div>
+            <div class="stat-card" style="padding:15px;">
+                <h3>Esterilizados</h3>
+                <div class="number" style="font-size:24px;">${esteriliz}</div>
+            </div>
+            <div class="stat-card" style="padding:15px;">
+                <h3>Sem Microchip</h3>
+                <div class="number" style="font-size:24px;color:var(--color-warning);">${semMicrochip}</div>
+            </div>
+        </div>
+
+        <!-- Lista de animais -->
+        <h3 style="color:var(--color-primary);margin-bottom:12px;">Animais nesta Colónia</h3>
+        ${animaisHTML}
+    `;
+
+    document.getElementById('colonyInfoModal').style.display = 'block';
+}
+
+function closeColonyInfoModal() {
+    document.getElementById('colonyInfoModal').style.display = 'none';
+}
+
+
+    // ── COLONY DROPDOWN helper ────────────────────────────────────
+    function populateColonyDropdown(selectId, selectedId = '') {
+        const sel = document.getElementById(selectId);
+        sel.innerHTML = '<option value="">Sem colónia</option>';
+        colonies.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${c.name} (${c.zone})`;
+            if (c.id === selectedId) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    }
+
+    // ── ANIMAL MODAL ──────────────────────────────────────────────
+    function openAddAnimalModal() {
+        editingAnimalId = null;
+        document.getElementById('animalModalTitle').textContent = 'Adicionar Animal';
+        document.getElementById('animalForm').reset();
+        document.getElementById('animalId').value = '';
+        document.getElementById('vaccinesList').innerHTML = '';
+        populateColonyDropdown('animalColonyId', '');
+        document.getElementById('animalModal').style.display = 'block';
+    }
+
+    function closeAnimalModal() {
+        document.getElementById('animalModal').style.display = 'none';
+        document.getElementById('vaccinesList').innerHTML = '';
+    }
+
+    function saveAnimal() {
+        const name    = document.getElementById('animalName').value.trim();
+        const species = document.getElementById('animalSpecies').value;
+        const sex     = document.getElementById('animalSex').value;
+
+        if (!name || !species || !sex) {
+            showToast('Preenche os campos obrigatórios: Nome, Espécie e Sexo.', 'error');
+            return;
+        }
+
+        const microchip  = document.getElementById('animalMicrochip').value.trim();
+        const colonyId   = document.getElementById('animalColonyId').value;
+
+        // Microchip único
+        if (microchip) {
+            const duplicate = animals.find(a => a.microchip === microchip && a.id !== editingAnimalId);
+            if (duplicate) {
+                showToast(`Já existe um animal com o microchip ${microchip} (${duplicate.name}).`, 'error');
+                return;
+            }
+        }
+
+        // Determinar status
+        let status = 'Disponível';
+        if (editingAnimalId) {
+            const existing = animals.find(a => a.id === editingAnimalId);
+            if (existing && existing.status === 'Adotado') status = 'Adotado';
+        }
+        if (colonyId) status = 'Colónia';
+        if (editingAnimalId) {
+            const existing = animals.find(a => a.id === editingAnimalId);
+            if (existing && existing.status === 'Adotado') status = 'Adotado'; // adotado prevalece
+        }
+
+        const id = editingAnimalId || Date.now().toString();
+        const animal = {
+            id,
+            name,
+            species,
+            sex,
+            birthDate:     document.getElementById('animalBirthDate').value,
+            color:         document.getElementById('animalColor').value.trim(),
+            furType:       document.getElementById('animalFurType').value.trim(),
+            microchip,
+            behavior:      document.getElementById('animalBehavior').value.trim(),
+            sterilized:    document.getElementById('animalSterilized').value,
+            vaccines:      getVaccinesFromContainer('vaccinesList'),
+            healthBulletin:document.getElementById('animalHealthBulletin').value.trim(),
+            vetHistory:    document.getElementById('animalVetHistory').value.trim(),
+            owner:         document.getElementById('animalOwner').value.trim(),
+            colonyId,
+            location:      document.getElementById('animalLocation').value.trim(),
+            status,
+            sterilizationHistory: editingAnimalId ? (animals.find(a=>a.id===editingAnimalId)||{}).sterilizationHistory : undefined,
+            dewormingHistory:     editingAnimalId ? (animals.find(a=>a.id===editingAnimalId)||{}).dewormingHistory     : undefined,
+        };
+
+        if (editingAnimalId) {
+            const idx = animals.findIndex(a => a.id === editingAnimalId);
+            animals[idx] = animal;
+        } else {
+            animals.push(animal);
+        }
+
+        persist();
+        closeAnimalModal();
+        renderAnimalsTable();
+        renderColoniesTable(); // recalcula contagem
+        updateDashboard();
+        showToast('Animal guardado com sucesso!', 'success');
+    }
+
+    function editAnimal(id) {
+        editingAnimalId = id;
+        const a = animals.find(x => x.id === id);
+        document.getElementById('animalModalTitle').textContent = 'Editar Animal';
+        document.getElementById('animalId').value        = a.id;
+        document.getElementById('animalName').value      = a.name;
+        document.getElementById('animalSpecies').value   = a.species;
+        document.getElementById('animalSex').value       = a.sex;
+        document.getElementById('animalBirthDate').value = a.birthDate    || '';
+        document.getElementById('animalColor').value     = a.color        || '';
+        document.getElementById('animalFurType').value   = a.furType      || '';
+        document.getElementById('animalMicrochip').value = a.microchip    || '';
+        document.getElementById('animalBehavior').value  = a.behavior     || '';
+        document.getElementById('animalSterilized').value= a.sterilized   || '';
+        document.getElementById('animalHealthBulletin').value = a.healthBulletin || '';
+        document.getElementById('animalVetHistory').value     = a.vetHistory     || '';
+        document.getElementById('animalOwner').value     = a.owner        || '';
+        document.getElementById('animalLocation').value  = a.location     || '';
+        populateColonyDropdown('animalColonyId', a.colonyId || '');
+        loadVaccinesToContainer('vaccinesList', a.vaccines || []);
+        document.getElementById('animalModal').style.display = 'block';
+    }
+
+    function deleteAnimal(id) {
+        if (!confirm('Tem a certeza que deseja eliminar este animal?')) return;
+        animals = animals.filter(a => a.id !== id);
+        persist();
+        renderAnimalsTable();
+        renderColoniesTable();
+        updateDashboard();
+        showToast('Animal eliminado.', 'warning');
+    }
+
+    function viewAnimalInfo(id) {
+        const a = animals.find(x => x.id === id);
+        const colony = getColonyName(a.colonyId);
+
+        let vaccinesHTML = '';
+        if (a.vaccines && a.vaccines.length > 0) {
+            vaccinesHTML = '<ul style="margin:6px 0 0 16px;">' +
+                a.vaccines.map(v => `<li>${v.name || '—'} &nbsp;|&nbsp; ${v.date || 'sem data'}</li>`).join('') +
+                '</ul>';
+        } else {
+            vaccinesHTML = '<em>Nenhuma registada</em>';
+        }
+
+        let sterilHTML = '';
+        if (a.sterilizationHistory) {
+            const sh = a.sterilizationHistory;
+            sterilHTML = `<br><strong>Esterilização:</strong> ${sh.date || '—'} — ${sh.vet || ''} ${sh.notes ? '(' + sh.notes + ')' : ''}`;
+        }
+
+        let dewormHTML = '';
+        if (a.dewormingHistory && a.dewormingHistory.length > 0) {
+            const dh = a.dewormingHistory;
+            dewormHTML = `<br><strong>Desparasitações (${dh.length}):</strong><ul style="margin:4px 0 0 16px;">` +
+                dh.map(d => `<li>${d.date} — ${d.product || 'produto não indicado'}${d.nextDate ? ' | próx: ' + d.nextDate : ''}</li>`).join('') +
+                '</ul>';
+        }
+
+        document.getElementById('animalInfoContent').innerHTML = `
+            <div class="info-grid">
+                <div class="info-item"><strong>Nome</strong>${a.name}</div>
+                <div class="info-item"><strong>Espécie</strong>${a.species}</div>
+                <div class="info-item"><strong>Sexo</strong>${a.sex}</div>
+                <div class="info-item"><strong>Data Nascimento</strong>${a.birthDate || '—'}</div>
+                <div class="info-item"><strong>Cor</strong>${a.color || '—'}</div>
+                <div class="info-item"><strong>Tipo de Pelo</strong>${a.furType || '—'}</div>
+                <div class="info-item"><strong>Microchip</strong>${a.microchip || '—'}</div>
+                <div class="info-item"><strong>Esterilizado</strong>${a.sterilized || '—'}</div>
+                <div class="info-item"><strong>Proprietário</strong>${a.owner || '—'}</div>
+                <div class="info-item"><strong>Colónia</strong>${colony}</div>
+                <div class="info-item"><strong>Local Albergue</strong>${a.location || '—'}</div>
+                <div class="info-item"><strong>Status</strong>${a.status}</div>
+            </div>
+            <div style="margin-top:16px;">
+                <strong>Comportamento:</strong> ${a.behavior || '—'}
+            </div>
+            <div style="margin-top:12px;">
+                <strong>Boletim Sanitário:</strong> ${a.healthBulletin || '—'}
+            </div>
+            <div style="margin-top:12px;">
+                <strong>Histórico Veterinário:</strong> ${a.vetHistory || '—'}
+            </div>
+            <div style="margin-top:12px;">
+                <strong>Vacinas:</strong>${vaccinesHTML}
+            </div>
+            ${sterilHTML}
+            ${dewormHTML}
+        `;
+        document.getElementById('animalInfoModal').style.display = 'block';
+    }
+
+    function closeAnimalInfoModal() {
+        document.getElementById('animalInfoModal').style.display = 'none';
+    }
+
+    // ── RENDER ANIMALS TABLE ──────────────────────────────────────
+    function buildAnimalRow(a) {
+        const colony = getColonyName(a.colonyId);
+        const badgeClass = a.status === 'Adotado' ? 'badge-info' : a.status === 'Colónia' ? 'badge-warning' : 'badge-success';
+        return `<tr>
+            <td>${a.name}</td>
+            <td>${a.species}</td>
+            <td>${a.microchip || '—'}</td>
+            <td>${colony}</td>
+            <td>${a.owner || '—'}</td>
+            <td><span class="badge ${badgeClass}">${a.status}</span></td>
+            <td>
+                <button class="btn btn-small btn-primary"  onclick="viewAnimalInfo('${a.id}')">Info</button>
+                <button class="btn btn-small btn-primary"  onclick="editAnimal('${a.id}')">Editar</button>
+                <button class="btn btn-small btn-warning"  onclick="openSterilizationModal('${a.id}')">Esterilizar</button>
+                <button class="btn btn-small btn-success"  onclick="openDesparasitacaoModal('${a.id}')">Desparasitar</button>
+                <button class="btn btn-small btn-danger"   onclick="deleteAnimal('${a.id}')">Eliminar</button>
+            </td>
+        </tr>`;
+    }
+
+    function renderAnimalsTable() {
+        const tbody = document.querySelector('#animalsTable tbody');
+        tbody.innerHTML = animals.length === 0
+            ? '<tr><td colspan="7" style="text-align:center;">Nenhum animal registado</td></tr>'
+            : animals.map(buildAnimalRow).join('');
+    }
+
+    function filterAnimals() {
+        const q = document.getElementById('searchAnimals').value.toLowerCase();
+        const filtered = animals.filter(a =>
+            a.name.toLowerCase().includes(q) ||
+            (a.microchip  && a.microchip.toLowerCase().includes(q)) ||
+            (a.owner      && a.owner.toLowerCase().includes(q))
+        );
+        const tbody = document.querySelector('#animalsTable tbody');
+        tbody.innerHTML = filtered.length === 0
+            ? '<tr><td colspan="7" style="text-align:center;">Nenhum animal encontrado</td></tr>'
+            : filtered.map(buildAnimalRow).join('');
+    }
+
+    // ── STERILIZATION ─────────────────────────────────────────────
+    function openSterilizationModal(id) {
+        document.getElementById('sterilizationAnimalId').value = id;
+        document.getElementById('sterilizationForm').reset();
+        document.getElementById('sterilizationModal').style.display = 'block';
+    }
+
+    function closeSterilizationModal() {
+        document.getElementById('sterilizationModal').style.display = 'none';
+    }
+
+    function saveSterilization() {
+        const date = document.getElementById('sterilizationDate').value;
+        if (!date) { showToast('Introduz a data da esterilização.', 'error'); return; }
+        const id = document.getElementById('sterilizationAnimalId').value;
+        const a  = animals.find(x => x.id === id);
+        a.sterilized = 'Sim';
+        a.sterilizationHistory = {
+            date,
+            vet:   document.getElementById('sterilizationVet').value.trim(),
+            notes: document.getElementById('sterilizationNotes').value.trim()
+        };
+        persist();
+        closeSterilizationModal();
+        renderAnimalsTable();
+        updateDashboard();
+        showToast('Esterilização registada!', 'success');
+    }
+
+    // ── DESPARASITAÇÃO ────────────────────────────────────────────
+    function openDesparasitacaoModal(id) {
+        document.getElementById('DesparasitacaoAnimalId').value = id;
+        document.getElementById('DesparasitacaoForm').reset();
+        document.getElementById('DesparasitacaoModal').style.display = 'block';
+    }
+
+    function closeDesparasitacaoModal() {
+        document.getElementById('DesparasitacaoModal').style.display = 'none';
+    }
+
+    function saveDesparasitacao() {
+        const date = document.getElementById('DesparasitacaoDate').value;
+        if (!date) { showToast('Introduz a data da desparasitação.', 'error'); return; }
+        const id = document.getElementById('DesparasitacaoAnimalId').value;
+        const a  = animals.find(x => x.id === id);
+        if (!a.dewormingHistory) a.dewormingHistory = [];
+        a.dewormingHistory.push({
+            date,
+            product:  document.getElementById('DesparasitacaoProduct').value.trim(),
+            nextDate: document.getElementById('DesparasitacaoNextDate').value,
+            notes:    document.getElementById('DesparasitacaoNotes').value.trim()
+        });
+        persist();
+        closeDesparasitacaoModal();
+        renderAnimalsTable();
+        showToast('Desparasitação registada!', 'success');
+    }
+
+    // ── COLONIES ──────────────────────────────────────────────────
+    function openAddColonyModal() {
+        document.getElementById('colonyForm').reset();
+        document.getElementById('colonyModal').style.display = 'block';
+    }
+
+    function closeColonyModal() {
+        document.getElementById('colonyModal').style.display = 'none';
+    }
+
+    function saveColony() {
+        const name = document.getElementById('colonyName').value.trim();
+        const zone = document.getElementById('colonyZone').value.trim();
+        if (!name || !zone) { showToast('Preenche o Nome e a Zona da colónia.', 'error'); return; }
+
+        colonies.push({
+            id:          Date.now().toString(),
+            name,
+            zone,
+            responsible: document.getElementById('colonyResponsible').value.trim(),
+            notes:       document.getElementById('colonyNotes').value.trim()
+        });
+        persist();
+        closeColonyModal();
+        renderColoniesTable();
+        showToast('Colónia registada!', 'success');
+    }
+
+    function deleteColony(id) {
+        if (!confirm('Tem a certeza que deseja eliminar esta colónia?\nOs animais associados passarão a "Sem colónia".')) return;
+        // desligar animais
+        animals.forEach(a => { if (a.colonyId === id) { a.colonyId = ''; if (a.status === 'Colónia') a.status = 'Disponível'; } });
+        colonies = colonies.filter(c => c.id !== id);
+        persist();
+        renderColoniesTable();
+        renderAnimalsTable();
+        updateDashboard();
+        showToast('Colónia eliminada.', 'warning');
+    }
+
+    function renderColoniesTable() {
+        const tbody = document.querySelector('#coloniesTable tbody');
+        if (colonies.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma colónia registada</td></tr>';
+            return;
+        }
+        tbody.innerHTML = colonies.map(c => `
+            <tr>
+                <td>${c.name}</td>
+                <td>${c.zone}</td>
+                <td>${countAnimalsInColony(c.id)}</td>
+                <td>${c.responsible || '—'}</td>
+                <td>
+                    <button class="btn btn-small btn-primary" onclick="viewColonyInfo('${c.id}')">Ver</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteColony('${c.id}')">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // ── ADOPTION ──────────────────────────────────────────────────
+    function toggleAnimalSearch() {
+        const useExisting = document.getElementById('useExistingAnimal').checked;
+        const section     = document.getElementById('animalSearchSection');
+        if (useExisting) {
+            section.classList.remove('hidden');
+        } else {
+            section.classList.add('hidden');
+            document.getElementById('searchMicrochip').value = '';
+            document.getElementById('animalSearchResults').classList.add('hidden');
+        }
+    }
+
+    function searchAnimalByMicrochip() {
+        const q       = document.getElementById('searchMicrochip').value.toLowerCase().trim();
+        const results = document.getElementById('animalSearchResults');
+        if (q.length < 1) { results.classList.add('hidden'); return; }
+
+        const matches = animals.filter(a =>
+            (a.microchip && a.microchip.toLowerCase().includes(q)) ||
+            a.name.toLowerCase().includes(q)
+        );
+
+        if (matches.length === 0) {
+            results.innerHTML = '<div class="animal-search-item" style="color:#888;">Nenhum animal encontrado</div>';
+        } else {
+            results.innerHTML = matches.map(a => `
+                <div class="animal-search-item" onclick="selectAnimal('${a.id}')">
+                    <strong>${a.name}</strong> &nbsp;·&nbsp; ${a.species}
+                    <br><small>Microchip: ${a.microchip || '—'}</small>
+                </div>
+            `).join('');
+        }
+        results.classList.remove('hidden');
+    }
+
+    function selectAnimal(id) {
+        const a = animals.find(x => x.id === id);
+        document.getElementById('adoptionAnimalName').value       = a.name;
+        document.getElementById('adoptionAnimalSpecies').value    = a.species;
+        document.getElementById('adoptionAnimalSex').value        = a.sex;
+        document.getElementById('adoptionAnimalBirthDate').value  = a.birthDate    || '';
+        document.getElementById('adoptionAnimalColor').value      = a.color        || '';
+        document.getElementById('adoptionAnimalFurType').value    = a.furType      || '';
+        document.getElementById('adoptionAnimalMicrochip').value  = a.microchip    || '';
+        document.getElementById('adoptionAnimalSterilized').value = a.sterilized   || '';
+        document.getElementById('adoptionAnimalBehavior').value   = a.behavior     || '';
+        document.getElementById('adoptionAnimalHealthBulletin').value = a.healthBulletin || '';
+        document.getElementById('adoptionAnimalVetHistory').value = a.vetHistory   || '';
+        document.getElementById('adoptionAnimalLocation').value   = a.location     || '';
+        loadVaccinesToContainer('adoptionVaccinesList', a.vaccines || []);
+        document.getElementById('animalSearchResults').classList.add('hidden');
+        document.getElementById('searchMicrochip').value = a.microchip || a.name;
+    }
+
+    function clearAdoptionAnimalFields() {
+        ['adoptionAnimalName','adoptionAnimalSpecies','adoptionAnimalBirthDate',
+         'adoptionAnimalColor','adoptionAnimalFurType','adoptionAnimalMicrochip',
+         'adoptionAnimalBehavior','adoptionAnimalHealthBulletin',
+         'adoptionAnimalVetHistory','adoptionAnimalLocation'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        document.getElementById('adoptionAnimalSex').value = '';
+        document.getElementById('adoptionAnimalSterilized').value = '';
+        document.getElementById('adoptionVaccinesList').innerHTML = '';
+    }
+
+    function openAddAdoptionModal() {
+        editingAdoptionId = null;
+        document.getElementById('adoptionForm').reset();
+        document.getElementById('adoptionId').value = '';
+        document.getElementById('useExistingAnimal').checked = false;
+        document.getElementById('animalSearchSection').classList.add('hidden');
+        document.getElementById('adoptionVaccinesList').innerHTML = '';
+        document.getElementById('animalSearchResults').classList.add('hidden');
+        document.getElementById('adoptionModal').style.display = 'block';
+    }
+
+    function closeAdoptionModal() {
+        document.getElementById('adoptionModal').style.display = 'none';
+        document.getElementById('adoptionVaccinesList').innerHTML = '';
+    }
+
+    // Cria animal a partir do formulário de adoção
+    function createAnimalFromAdoption(animalId, vaccines, adopterName) {
+        const a = {
+            id:            animalId,
+            name:          document.getElementById('adoptionAnimalName').value.trim(),
+            species:       document.getElementById('adoptionAnimalSpecies').value.trim(),
+            sex:           document.getElementById('adoptionAnimalSex').value,
+            birthDate:     document.getElementById('adoptionAnimalBirthDate').value,
+            color:         document.getElementById('adoptionAnimalColor').value.trim(),
+            furType:       document.getElementById('adoptionAnimalFurType').value.trim(),
+            microchip:     document.getElementById('adoptionAnimalMicrochip').value.trim(),
+            behavior:      document.getElementById('adoptionAnimalBehavior').value.trim(),
+            sterilized:    document.getElementById('adoptionAnimalSterilized').value,
+            vaccines,
+            healthBulletin:document.getElementById('adoptionAnimalHealthBulletin').value.trim(),
+            vetHistory:    document.getElementById('adoptionAnimalVetHistory').value.trim(),
+            location:      document.getElementById('adoptionAnimalLocation').value.trim(),
+            owner:         adopterName,
+            colonyId:      '',
+            status:        'Adotado'
+        };
+        animals.push(a);
+    }
+
+    function saveAdoption() {
+        // ── Validação: adotante ──────────────────────────────────
+        const adopterName     = document.getElementById('adopterName').value.trim();
+        const adopterBI       = document.getElementById('adopterBI').value.trim();
+        const adopterNIF      = document.getElementById('adopterNIF').value.trim();
+        const adopterPhone    = document.getElementById('adopterPhone').value.trim();
+        const adopterAddress  = document.getElementById('adopterAddress').value.trim();
+        const adopterPostal   = document.getElementById('adopterPostalCode').value.trim();
+        const adopterParish   = document.getElementById('adopterParish').value.trim();
+        const adopterMunic    = document.getElementById('adopterMunicipality').value.trim();
+        const adoptionDate    = document.getElementById('adoptionDate').value;
+        const useExisting     = document.getElementById('useExistingAnimal').checked;
+
+        if (!adopterName || !adopterBI || !adopterNIF || !adopterPhone ||
+            !adopterAddress || !adopterPostal || !adopterParish || !adopterMunic) {
+            showToast('Preenche todos os campos obrigatórios do adotante.', 'error');
+            return;
+        }
+
+        // Código postal
+        if (!/^\d{4}-\d{3}$/.test(adopterPostal)) {
+            showToast('Código postal inválido. Formato: 0000-000', 'error');
+            return;
+        }
+
+        // Data não pode ser no futuro
+        if (!adoptionDate) {
+            showToast('Introduz a data da adoção.', 'error');
+            return;
+        }
+        if (new Date(adoptionDate) > new Date()) {
+            showToast('A data da adoção não pode ser no futuro.', 'error');
+            return;
+        }
+
+        const vaccines    = getVaccinesFromContainer('adoptionVaccinesList');
+        const microchipIn = document.getElementById('adoptionAnimalMicrochip').value.trim();
+
+        // ── Validação: animal ─────────────────────────────────────
+        if (!useExisting) {
+            const anName = document.getElementById('adoptionAnimalName').value.trim();
+            const anSp   = document.getElementById('adoptionAnimalSpecies').value.trim();
+            const anSex  = document.getElementById('adoptionAnimalSex').value;
+            if (!anName || !anSp || !anSex) {
+                showToast('No modo manual: preenche Nome, Espécie e Sexo do animal.', 'error');
+                return;
+            }
+        } else {
+            if (!microchipIn) {
+                showToast('No modo "animal existente": indica o microchip ou seleciona um animal da lista.', 'error');
+                return;
+            }
+        }
+
+        // ── Determinar animalId ───────────────────────────────────
+        let animalId;
+
+        if (useExisting) {
+            const existing = animals.find(a => a.microchip === microchipIn);
+            if (existing) {
+                animalId = existing.id;
+                existing.status = 'Adotado';
+                existing.owner  = adopterName;
+            } else {
+                // Microchip não encontrado → criar novo
+                animalId = Date.now().toString() + '_a';
+                createAnimalFromAdoption(animalId, vaccines, adopterName);
+            }
+        } else {
+            if (microchipIn) {
+                const existing = animals.find(a => a.microchip === microchipIn);
+                if (existing) {
+                    // Reutilizar animal existente sem duplicar
+                    animalId = existing.id;
+                    existing.status = 'Adotado';
+                    existing.owner  = adopterName;
+                } else {
+                    animalId = Date.now().toString() + '_a';
+                    createAnimalFromAdoption(animalId, vaccines, adopterName);
+                }
+            } else {
+                animalId = Date.now().toString() + '_a';
+                createAnimalFromAdoption(animalId, vaccines, adopterName);
+            }
+        }
+
+        // ── Criar registo de adoção ───────────────────────────────
+        const adoption = {
+            id:               editingAdoptionId || Date.now().toString(),
+            animalId,
+            animalName:       document.getElementById('adoptionAnimalName').value.trim(),
+            adopterName,
+            adopterBI,
+            adopterNIF,
+            adopterPhone,
+            adopterAddress,
+            adopterPostalCode: adopterPostal,
+            adopterParish,
+            adopterMunicipality: adopterMunic,
+            adopterEmail:     document.getElementById('adopterEmail').value.trim(),
+            adoptionDate,
+            notes:            document.getElementById('adoptionNotes').value.trim(),
+            status:           'Concluída'
+        };
+
+        if (editingAdoptionId) {
+            const idx = adoptions.findIndex(x => x.id === editingAdoptionId);
+            adoptions[idx] = adoption;
+        } else {
+            adoptions.push(adoption);
+        }
+
+        persist();
+        closeAdoptionModal();
+        renderAdoptionsTable();
+        renderAnimalsTable();
+        renderColoniesTable();
+        updateDashboard();
+        showToast('Adoção registada com sucesso!', 'success');
+    }
+
+    function deleteAdoption(id) {
+        if (!confirm('Tem a certeza que deseja eliminar esta adoção?')) return;
+        adoptions = adoptions.filter(a => a.id !== id);
+        persist();
+        renderAdoptionsTable();
+        updateDashboard();
+        showToast('Adoção eliminada.', 'warning');
+    }
+
+    function viewAdoption(id) {
+        const ad = adoptions.find(a => a.id === id);
+        const info = `
+ADOÇÃO — ${ad.animalName}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ADOTANTE:
+  Nome: ${ad.adopterName}
+  BI: ${ad.adopterBI}   NIF: ${ad.adopterNIF}
+  Telefone: ${ad.adopterPhone}
+  Morada: ${ad.adopterAddress}
+  CP: ${ad.adopterPostalCode} — ${ad.adopterParish}, ${ad.adopterMunicipality}
+  Email: ${ad.adopterEmail || '—'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Data da Adoção: ${ad.adoptionDate}
+Observações: ${ad.notes || '—'}`;
+        alert(info);
+    }
+
+    function renderAdoptionsTable() {
+        const tbody = document.querySelector('#adoptionsTable tbody');
+        if (adoptions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma adoção registada</td></tr>';
+            return;
+        }
+        tbody.innerHTML = adoptions.map(ad => `
+            <tr>
+                <td>${ad.animalName}</td>
+                <td>${ad.adoptionDate}</td>
+                <td>${ad.adopterName}</td>
+                <td>${ad.adopterPhone}</td>
+                <td><span class="badge badge-info">${ad.status}</span></td>
+                <td>
+                    <button class="btn btn-small btn-primary" onclick="viewAdoption('${ad.id}')">Ver</button>
+                    <button class="btn btn-small btn-danger"  onclick="deleteAdoption('${ad.id}')">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // ── REPORTS ───────────────────────────────────────────────────
+    function generateReport() {
+        const type   = document.getElementById('reportType').value;
+        const output = document.getElementById('reportOutput');
+        let html = '';
+
+        if (type === 'Animais por Status') {
+            const groups = {};
+            animals.forEach(a => { groups[a.status] = (groups[a.status] || 0) + 1; });
+            html = '<table><thead><tr><th>Status</th><th>Nº Animais</th></tr></thead><tbody>' +
+                Object.entries(groups).map(([s,n]) => `<tr><td>${s}</td><td>${n}</td></tr>`).join('') +
+                '</tbody></table>';
+        } else if (type === 'Adoções por Período') {
+            html = '<table><thead><tr><th>Animal</th><th>Adotante</th><th>Data</th></tr></thead><tbody>' +
+                adoptions.map(a => `<tr><td>${a.animalName}</td><td>${a.adopterName}</td><td>${a.adoptionDate}</td></tr>`).join('') +
+                '</tbody></table>';
+        } else if (type === 'Colónias Ativas') {
+            html = '<table><thead><tr><th>Colónia</th><th>Zona</th><th>Animais</th></tr></thead><tbody>' +
+                colonies.map(c => `<tr><td>${c.name}</td><td>${c.zone}</td><td>${countAnimalsInColony(c.id)}</td></tr>`).join('') +
+                '</tbody></table>';
+        }
+
+        output.innerHTML = html || '<p>Sem dados para apresentar.</p>';
+        updateDashboard();
+    }
+
+    // ── CLOSE MODAL ON OUTSIDE CLICK ──────────────────────────────
+    window.addEventListener('click', function (e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            // limpar vacinas ao fechar
+            document.getElementById('vaccinesList').innerHTML = '';
+            document.getElementById('adoptionVaccinesList').innerHTML = '';
+        }
+        // fechar dropdown de pesquisa de animal
+        if (!e.target.closest('.animal-search-wrapper')) {
+            const r = document.getElementById('animalSearchResults');
+            if (r) r.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>
