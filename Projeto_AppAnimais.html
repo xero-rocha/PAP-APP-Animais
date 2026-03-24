@@ -1628,15 +1628,6 @@ function closeColonyInfoModal() {
             return;
         }
 
-        // Data não pode ser no futuro
-        if (!adoptionDate) {
-            showToast('Introduz a data da adoção.', 'error');
-            return;
-        }
-        if (new Date(adoptionDate) > new Date()) {
-            showToast('A data da adoção não pode ser no futuro.', 'error');
-            return;
-        }
 
         const vaccines    = getVaccinesFromContainer('adoptionVaccinesList');
         const microchipIn = document.getElementById('adoptionAnimalMicrochip').value.trim();
