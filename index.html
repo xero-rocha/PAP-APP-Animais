@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project Hub</title>
+    <style>
+        /* CSS to make it look pretty */
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        h1 { margin-bottom: 30px; color: var(--primary); }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            display: grid;
+            gap: 20px;
+        }
+        /* Card Style */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            border-color: var(--primary);
+        }
+        .card h2 { margin: 0 0 10px 0; font-size: 1.25rem; color: var(--primary); }
+        .card p { margin: 0; font-size: 0.95rem; color: #64748b; }
+    </style>
+</head>
+<body>
+
+    <h1>Project Navigation</h1>
+
+    <div class="container">
+        <!-- LINK 1-->
+        <a href="Projeto_AppAnimais.html  " class="card">
+            <h2>Main app </h2>
+            <p>Not finished yet but showcases thye features pretty well</p>
+        </a>
+
+        <!-- LINK 2-->
+        <a href="Projeto_AppAnimais-ComDadosdemo.html" class="card">
+            <h2>Main app with demo data</h2>
+            <p>The same as the Main file but with pre loading of some data for demonstration purposes</p>
+        </a>
+
+        <!-- Add more cards by copying the block above -->
+    </div>
+
+</body>
+</html>
