@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
     <style>
-        /* CSS to make it look pretty */
         :root {
             --primary: #2563eb;
-            --bg: #f8fafc;
+            --bg: #f3f3f3;
             --text: #1e293b;
+            --text-light: #64748b;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,14 +21,24 @@
             padding: 50px 20px;
             margin: 0;
         }
-        h1 { margin-bottom: 30px; color: var(--primary); }
+        h1 { margin-bottom: 20px; color: var(--primary); }
+
+        /* Fixes the text alignment and spacing */
+        .description {
+            max-width: 800px;
+            width: 100%;
+            text-align: left; /* Aligns text to the left */
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
         .container {
             max-width: 800px;
             width: 100%;
             display: grid;
             gap: 20px;
         }
-        /* Card Style */
         .card {
             background: white;
             padding: 20px;
@@ -45,28 +55,41 @@
             border-color: var(--primary);
         }
         .card h2 { margin: 0 0 10px 0; font-size: 1.25rem; color: var(--primary); }
-        .card p { margin: 0; font-size: 0.95rem; color: #64748b; }
+        .card p { margin: 0; font-size: 0.95rem; color: var(--text-light); }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
     </style>
 </head>
 <body>
 
     <h1>Index</h1>
 
+    <!-- All text consolidated into one div -->
+    <div class="description">
+        <p>Welcome to the index page! Below are links to the different versions of the app. Click on any card to explore.</p>
+        <p>This is a simple animal management app for small scale deployments built with HTML, CSS, and JavaScript. 
+        <p>Right now, it functions as a structural prototype using in-memory storage. 
+        While several features are already implemented, I am currently working on integrating <strong>Supabase</strong> for persistent data storage, user authentication, and permissions.</p>
+        <p>Feel free to explore the versions below and provide feedback! More updates to come.</p>
+    </div>
+
     <div class="container">
-        <!-- LINK 1-->
-        <a href="Projeto_AppAnimais.html  " class="card">
-            <h2>Main app </h2>
+        <a href="Projeto_AppAnimais.html" class="card">
+            <h2>Main app</h2>
             <p>Not finished yet but showcases the features pretty well</p>
         </a>
 
-        <!-- LINK 2-->
         <a href="Projeto_AppAnimais-ComDadosdemo.html" class="card">
             <h2>Main app with demo data</h2>
-            <p>The same as the Main file but with pre loading of some data for demonstration purposes</p>
+            <p>The same as the Main file but with pre-loading of some data for demonstration purposes</p>
         </a>
-
-        <!-- Add more cards by copying the block above -->
     </div>
+
+    <p class="footer">Francisco Rocha 2026</p>
 
 </body>
 </html>
