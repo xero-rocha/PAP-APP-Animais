@@ -19,12 +19,23 @@
             --color-danger: #e74c3c;
         }
 
+        html.dark-mode {
+            --color-primary: #3498db;
+            --color-primary-dark: #2980b9;
+            --color-bg: #1a1a1a;
+            --color-sidebar: #1a1a1a;
+            --color-text: #e0e0e0;
+            --color-border: #444;
+            --color-hover: #2a2a2a;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--color-bg);
             color: var(--color-text);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container { display: flex; min-height: 100vh; }
@@ -37,6 +48,8 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            border-right: 1px solid var(--color-border);
+            transition: background-color 0.3s;
         }
 
         .logo {
@@ -57,7 +70,12 @@
         .menu-item:hover { background-color: rgba(255,255,255,0.1); }
         .menu-item.active { background-color: var(--color-primary); }
 
-        .main-content { margin-left: 260px; flex: 1; padding: 30px; }
+        .main-content { 
+            margin-left: 260px; 
+            flex: 1; 
+            padding: 30px;
+            transition: background-color 0.3s;
+        }
 
         .header {
             background-color: white;
@@ -68,7 +86,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .header {
+            background-color: #2a2a2a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
         .header h1 { color: var(--color-primary); }
 
         .stats-grid {
@@ -83,8 +108,18 @@
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .stat-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
         .stat-card h3 { font-size: 14px; color: #666; margin-bottom: 10px; }
+
+        html.dark-mode .stat-card h3 { color: #aaa; }
+
         .stat-card .number { font-size: 32px; font-weight: bold; color: var(--color-primary); }
 
         .table-container {
@@ -94,6 +129,12 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 30px;
             overflow-x: auto;
+            transition: background-color 0.3s;
+        }
+
+        html.dark-mode .table-container {
+            background-color: #2a2a2a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         table { width: 100%; border-collapse: collapse; }
@@ -104,7 +145,12 @@
             text-align: left;
             font-weight: 600;
         }
-        table td { padding: 12px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+        table td { 
+            padding: 12px; 
+            border-bottom: 1px solid var(--color-border); 
+            vertical-align: middle;
+            transition: background-color 0.3s;
+        }
         table tr:hover { background-color: var(--color-hover); }
 
         .btn {
@@ -142,7 +188,13 @@
             max-width: 950px;
             width: 92%;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .modal-content {
+            background-color: #2a2a2a;
+        }
+
         .modal-header {
             background-color: var(--color-primary);
             color: white;
@@ -160,6 +212,7 @@
             padding: 22px;
             max-height: calc(100vh - 180px);
             overflow-y: auto;
+            color: var(--color-text);
         }
         .modal-footer {
             padding: 16px 22px;
@@ -191,7 +244,19 @@
             border: 1px solid var(--color-border);
             border-radius: 4px;
             font-size: 13px;
+            background-color: white;
+            color: var(--color-text);
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        html.dark-mode .form-group input,
+        html.dark-mode .form-group select,
+        html.dark-mode .form-group textarea {
+            background-color: #333;
+            color: var(--color-text);
+            border-color: var(--color-border);
+        }
+
         .form-group input.input-error,
         .form-group select.input-error,
         .form-group textarea.input-error {
@@ -205,7 +270,13 @@
             border-radius: 6px;
             margin-bottom: 16px;
             border-left: 4px solid var(--color-primary);
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .form-section {
+            background-color: #333;
+        }
+
         .form-section h3 {
             margin-bottom: 13px;
             color: var(--color-primary);
@@ -219,6 +290,14 @@
             border: 1px solid var(--color-border);
             border-radius: 4px;
             font-size: 14px;
+            background-color: white;
+            color: var(--color-text);
+            transition: background-color 0.3s;
+        }
+
+        html.dark-mode .search-bar input {
+            background-color: #333;
+            color: var(--color-text);
         }
 
         .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
@@ -269,12 +348,20 @@
             width: 100%;
             z-index: 200;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .animal-search-results {
+            background-color: #333;
+        }
+
         .animal-search-item {
             padding: 9px 12px;
             cursor: pointer;
             border-bottom: 1px solid var(--color-border);
             font-size: 13px;
+            color: var(--color-text);
+            transition: background-color 0.3s;
         }
         .animal-search-item:hover { background-color: var(--color-hover); }
         .animal-search-item strong { color: var(--color-primary); }
@@ -305,7 +392,13 @@
             background-color: #f9f9f9;
             border-radius: 4px;
             font-size: 13px;
+            transition: background-color 0.3s;
         }
+
+        html.dark-mode .info-item {
+            background-color: #333;
+        }
+
         .info-item strong { color: var(--color-primary); display: block; margin-bottom: 3px; }
 
         /* Notification toast */
@@ -325,6 +418,33 @@
         #toast.toast-success { background-color: var(--color-success); }
         #toast.toast-error   { background-color: var(--color-danger); }
         #toast.toast-warning { background-color: var(--color-warning); }
+
+        .settings-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .settings-item label {
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -334,13 +454,13 @@
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo">🐾 Gestão de Animais</div>
-        <div class="menu-item active" onclick="showSection('dashboard', this)"> Dashboard</div>
-        <div class="menu-item" onclick="showSection('animals', this)"> Gestão de Animais</div>
-        <div class="menu-item" onclick="showSection('colonies', this)"> Gestão de Colónias</div>
-        <div class="menu-item" onclick="showSection('adoptions', this)"> Controlo de Adoções</div>
-        <div class="menu-item" onclick="showSection('reports', this)"> Relatórios</div>
-        <div class="menu-item" onclick="showSection('settings', this)"> Configurações</div>
+        <div class="logo">Gestão de Animais</div>
+        <div class="menu-item active" onclick="showSection('dashboard', this)">Dashboard</div>
+        <div class="menu-item" onclick="showSection('animals', this)">Gestão de Animais</div>
+        <div class="menu-item" onclick="showSection('colonies', this)">Gestão de Colónias</div>
+        <div class="menu-item" onclick="showSection('adoptions', this)">Controlo de Adoções</div>
+        <div class="menu-item" onclick="showSection('reports', this)">Relatórios</div>
+        <div class="menu-item" onclick="showSection('settings', this)">Configurações</div>
     </div>
 
     <!-- Main Content -->
@@ -483,12 +603,35 @@
         <div id="settings" class="section hidden">
             <div class="header"><h1>Configurações</h1></div>
             <div class="table-container">
-                <h3 style="margin-bottom:15px;">Informações do Sistema</h3>
-                <p><strong>Versão:</strong> 0.4.0</p>
-                <p><strong>Última Atualização:</strong> 18/02/2026</p>
-                <p><strong>Desenvolvido por:</strong> Francisco Rocha</p>
-                <button class="btn btn-primary" onclick="resetDemoData()">
-            🔄 Repor dados demo
+                
+                <!-- Theme Settings -->
+                <div class="settings-section">
+                    <h3>Tema</h3>
+                    <div class="settings-item">
+                        <label for="darkModeToggle">Modo Escuro</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="settings-section">
+                    <h3>Informações do Sistema</h3>
+                    <p><strong>Versão:</strong> 0.5.0</p>
+                    <p><strong>Última Atualização:</strong> 18/02/2026</p>
+                    <p><strong>Desenvolvido por:</strong> Francisco Rocha</p>
+                </div>
+
+                <!-- Reset Data -->
+                <div class="settings-section">
+                    <h3>Dados</h3>
+                    <button class="btn btn-primary" onclick="resetDemoData()">
+                        Repor dados demo
+                    </button>
+                </div>
+
             </div>
         </div>
 
@@ -940,63 +1083,82 @@
 <!-- JAVASCRIPT                                                   -->
 <!-- ============================================================ -->
 <script>
+    // ── DARK MODE ─────────────────────────────────────────────────
+    function initDarkMode() {
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        document.getElementById('darkModeToggle').checked = darkMode;
+        if (darkMode) {
+            document.documentElement.classList.add('dark-mode');
+        }
+    }
+
+    function toggleDarkMode() {
+        const isDark = document.getElementById('darkModeToggle').checked;
+        if (isDark) {
+            document.documentElement.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            document.documentElement.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'false');
+        }
+    }
+
     // ── DATA ──────────────────────────────────────────────────────
     let animals   = JSON.parse(localStorage.getItem('animals'))   || [];
     let colonies  = JSON.parse(localStorage.getItem('colonies'))  || [];
     let adoptions = JSON.parse(localStorage.getItem('adoptions')) || [];
 
     // ── DADOS DEMO ────────────────────────────────────────────────
-const DEMO_KEY = 'demo_loaded_v1';
+    const DEMO_KEY = 'demo_loaded_v1';
 
-const demoColonies = [
-    { id: 'c1', name: 'Colónia da Ribeira', zone: 'Barcelos Centro', responsible: 'Ana Ferreira', notes: 'Colónia urbana junto ao rio.' },
-    { id: 'c2', name: 'Colónia do Parque',  zone: 'Barcelos Norte',  responsible: 'João Matos',   notes: 'Zona verde perto do parque municipal.' },
-    { id: 'c3', name: 'Colónia Industrial', zone: 'Barcelos Sul',    responsible: 'Maria Costa',  notes: 'Área industrial, ~12 animais.' }
-];
+    const demoColonies = [
+        { id: 'c1', name: 'Colónia da Ribeira', zone: 'Barcelos Centro', responsible: 'Ana Ferreira', notes: 'Colónia urbana junto ao rio.' },
+        { id: 'c2', name: 'Colónia do Parque',  zone: 'Barcelos Norte',  responsible: 'João Matos',   notes: 'Zona verde perto do parque municipal.' },
+        { id: 'c3', name: 'Colónia Industrial', zone: 'Barcelos Sul',    responsible: 'Maria Costa',  notes: 'Área industrial, ~12 animais.' }
+    ];
 
-const demoAnimals = [
-    { id: 'a1', name: 'Rex',    species: 'Cão',  sex: 'Macho',  birthDate: '2020-03-15', color: 'Castanho',  furType: 'Curto',   microchip: '941000024501234', sterilized: 'Sim',              behavior: 'Dócil e brincalhão',    vaccines: [{name:'Raiva', date:'2024-01-10'},{name:'Parvovírus', date:'2024-01-10'}], healthBulletin: 'Bom estado geral', vetHistory: 'Vacinação anual em dia', owner: '',        colonyId: 'c1', location: '', status: 'Colónia',    sterilizationHistory: [{date:'2022-06-01',vet:'Dr. Sousa',notes:''}], dewormingHistory: [{date:'2024-09-01',product:'Milbemax',next:'2025-03-01',notes:''}] },
-    { id: 'a2', name: 'Mimi',   species: 'Gato', sex: 'Fêmea',  birthDate: '2021-07-20', color: 'Laranja',   furType: 'Médio',   microchip: '941000024501235', sterilized: 'Sim',              behavior: 'Independente',          vaccines: [{name:'Panleucopenia', date:'2024-03-05'}],               healthBulletin: 'Saudável',         vetHistory: '',                      owner: '',        colonyId: 'c2', location: '', status: 'Colónia',    sterilizationHistory: [{date:'2021-12-10',vet:'Dr. Lima',notes:''}],  dewormingHistory: [{date:'2024-06-01',product:'Drontal',next:'2024-12-01',notes:''}] },
-    { id: 'a3', name: 'Bolinha',species: 'Cão',  sex: 'Fêmea',  birthDate: '2019-11-05', color: 'Branco',    furType: 'Longo',   microchip: '941000024501236', sterilized: 'Sim',              behavior: 'Tímida mas afectuosa',  vaccines: [{name:'Raiva', date:'2024-02-14'}],                        healthBulletin: 'Ligeiro excesso de peso', vetHistory: 'Dieta prescrita', owner: 'Carlos Silva', colonyId: '', location: 'Canil Municipal', status: 'Disponível', sterilizationHistory: [], dewormingHistory: [] },
-    { id: 'a4', name: 'Tigre',  species: 'Gato', sex: 'Macho',  birthDate: '2022-01-30', color: 'Cinza',     furType: 'Curto',   microchip: '',                sterilized: 'Não especificado', behavior: 'Agressivo com estranhos',vaccines: [],                                                        healthBulletin: '',                 vetHistory: '',                      owner: '',        colonyId: 'c1', location: '', status: 'Colónia',    sterilizationHistory: [], dewormingHistory: [] },
-    { id: 'a5', name: 'Luna',   species: 'Gato', sex: 'Fêmea',  birthDate: '2020-05-12', color: 'Preto',     furType: 'Curto',   microchip: '941000024501238', sterilized: 'Sim',              behavior: 'Sociável',              vaccines: [{name:'Calicivírus', date:'2024-04-20'}],                  healthBulletin: 'Saudável',         vetHistory: '',                      owner: 'Pedro Rocha', colonyId: '', location: '', status: 'Adotado',  sterilizationHistory: [{date:'2020-10-01',vet:'Dr. Sousa',notes:''}], dewormingHistory: [] },
-    { id: 'a6', name: 'Duque',  species: 'Cão',  sex: 'Macho',  birthDate: '2018-08-22', color: 'Dourado',   furType: 'Médio',   microchip: '941000024501239', sterilized: 'Sim',              behavior: 'Calmo e obediente',     vaccines: [{name:'Raiva', date:'2023-11-01'},{name:'Esgana', date:'2023-11-01'}], healthBulletin: 'Articulações a monitorizar', vetHistory: 'Medicação anti-inflamatória', owner: '', colonyId: 'c3', location: '', status: 'Colónia', sterilizationHistory: [], dewormingHistory: [{date:'2024-01-10',product:'Milbemax',next:'2024-07-10',notes:''}] },
-    { id: 'a7', name: 'Mel',    species: 'Gato', sex: 'Fêmea',  birthDate: '2023-02-14', color: 'Creme',     furType: 'Longo',   microchip: '',                sterilized: 'Não',              behavior: 'Muito activa',          vaccines: [],                                                        healthBulletin: '',                 vetHistory: '',                      owner: '',        colonyId: 'c2', location: '', status: 'Colónia',    sterilizationHistory: [], dewormingHistory: [] },
-    { id: 'a8', name: 'Trovão', species: 'Cão',  sex: 'Macho',  birthDate: '2021-09-01', color: 'Preto/Castanho', furType: 'Curto', microchip: '941000024501240', sterilized: 'Sim',           behavior: 'Enérgico, precisa de exercício', vaccines: [{name:'Raiva', date:'2024-05-03'}], healthBulletin: 'Saudável', vetHistory: '',              owner: '',        colonyId: '',   location: 'Canil Municipal', status: 'Disponível', sterilizationHistory: [], dewormingHistory: [] }
-];
+    const demoAnimals = [
+        { id: 'a1', name: 'Rex',    species: 'Cão',  sex: 'Macho',  birthDate: '2020-03-15', color: 'Castanho',  furType: 'Curto',   microchip: '941000024501234', sterilized: 'Sim',              behavior: 'Dócil e brincalhão',    vaccines: [{name:'Raiva', date:'2024-01-10'},{name:'Parvovírus', date:'2024-01-10'}], healthBulletin: 'Bom estado geral', vetHistory: 'Vacinação anual em dia', owner: '',        colonyId: 'c1', location: '', status: 'Colónia',    sterilizationHistory: [{date:'2022-06-01',vet:'Dr. Sousa',notes:''}], dewormingHistory: [{date:'2024-09-01',product:'Milbemax',next:'2025-03-01',notes:''}] },
+        { id: 'a2', name: 'Mimi',   species: 'Gato', sex: 'Fêmea',  birthDate: '2021-07-20', color: 'Laranja',   furType: 'Médio',   microchip: '941000024501235', sterilized: 'Sim',              behavior: 'Independente',          vaccines: [{name:'Panleucopenia', date:'2024-03-05'}],               healthBulletin: 'Saudável',         vetHistory: '',                      owner: '',        colonyId: 'c2', location: '', status: 'Colónia',    sterilizationHistory: [{date:'2021-12-10',vet:'Dr. Lima',notes:''}],  dewormingHistory: [{date:'2024-06-01',product:'Drontal',next:'2024-12-01',notes:''}] },
+        { id: 'a3', name: 'Bolinha',species: 'Cão',  sex: 'Fêmea',  birthDate: '2019-11-05', color: 'Branco',    furType: 'Longo',   microchip: '941000024501236', sterilized: 'Sim',              behavior: 'Tímida mas afectuosa',  vaccines: [{name:'Raiva', date:'2024-02-14'}],                        healthBulletin: 'Ligeiro excesso de peso', vetHistory: 'Dieta prescrita', owner: 'Carlos Silva', colonyId: '', location: 'Canil Municipal', status: 'Disponível', sterilizationHistory: [], dewormingHistory: [] },
+        { id: 'a4', name: 'Tigre',  species: 'Gato', sex: 'Macho',  birthDate: '2022-01-30', color: 'Cinza',     furType: 'Curto',   microchip: '',                sterilized: 'Não especificado', behavior: 'Agressivo com estranhos',vaccines: [],                                                        healthBulletin: '',                 vetHistory: '',                      owner: '',        colonyId: 'c1', location: '', status: 'Colónia',    sterilizationHistory: [], dewormingHistory: [] },
+        { id: 'a5', name: 'Luna',   species: 'Gato', sex: 'Fêmea',  birthDate: '2020-05-12', color: 'Preto',     furType: 'Curto',   microchip: '941000024501238', sterilized: 'Sim',              behavior: 'Sociável',              vaccines: [{name:'Calicivírus', date:'2024-04-20'}],                  healthBulletin: 'Saudável',         vetHistory: '',                      owner: 'Pedro Rocha', colonyId: '', location: '', status: 'Adotado',  sterilizationHistory: [{date:'2020-10-01',vet:'Dr. Sousa',notes:''}], dewormingHistory: [] },
+        { id: 'a6', name: 'Duque',  species: 'Cão',  sex: 'Macho',  birthDate: '2018-08-22', color: 'Dourado',   furType: 'Médio',   microchip: '941000024501239', sterilized: 'Sim',              behavior: 'Calmo e obediente',     vaccines: [{name:'Raiva', date:'2023-11-01'},{name:'Esgana', date:'2023-11-01'}], healthBulletin: 'Articulações a monitorizar', vetHistory: 'Medicação anti-inflamatória', owner: '', colonyId: 'c3', location: '', status: 'Colónia', sterilizationHistory: [], dewormingHistory: [{date:'2024-01-10',product:'Milbemax',next:'2024-07-10',notes:''}] },
+        { id: 'a7', name: 'Mel',    species: 'Gato', sex: 'Fêmea',  birthDate: '2023-02-14', color: 'Creme',     furType: 'Longo',   microchip: '',                sterilized: 'Não',              behavior: 'Muito activa',          vaccines: [],                                                        healthBulletin: '',                 vetHistory: '',                      owner: '',        colonyId: 'c2', location: '', status: 'Colónia',    sterilizationHistory: [], dewormingHistory: [] },
+        { id: 'a8', name: 'Trovão', species: 'Cão',  sex: 'Macho',  birthDate: '2021-09-01', color: 'Preto/Castanho', furType: 'Curto', microchip: '941000024501240', sterilized: 'Sim',           behavior: 'Enérgico, precisa de exercício', vaccines: [{name:'Raiva', date:'2024-05-03'}], healthBulletin: 'Saudável', vetHistory: '',              owner: '',        colonyId: '',   location: 'Canil Municipal', status: 'Disponível', sterilizationHistory: [], dewormingHistory: [] }
+    ];
 
-const demoAdoptions = [
-    { id: 'ad1', animalId: 'a5', animalName: 'Luna',  animalSpecies: 'Gato', animalSex: 'Fêmea',  animalBirthDate: '2020-05-12', animalColor: 'Preto',  animalFurType: 'Curto', animalMicrochip: '941000024501238', animalSterilized: 'Sim', animalBehavior: 'Sociável', animalHealthBulletin: 'Saudável', animalVetHistory: '', animalLocation: '', animalVaccines: [{name:'Calicivírus', date:'2024-04-20'}], adopterName: 'Pedro Rocha',  adopterBI: '12345678',  adopterNIF: '234567890', adopterPhone: '912345678', adopterAddress: 'Rua das Flores, 12', adopterPostalCode: '4750-123', adopterParish: 'Barcelos', adopterMunicipality: 'Barcelos', adopterEmail: 'pedro@email.com', adoptionDate: '2024-06-15', observations: 'Animal entregue com boletim.', status: 'Concluída' },
-    { id: 'ad2', animalId: 'a3', animalName: 'Bolinha', animalSpecies: 'Cão', animalSex: 'Fêmea', animalBirthDate: '2019-11-05', animalColor: 'Branco', animalFurType: 'Longo', animalMicrochip: '941000024501236', animalSterilized: 'Sim', animalBehavior: 'Tímida mas afectuosa', animalHealthBulletin: 'Ligeiro excesso de peso', animalVetHistory: 'Dieta prescrita', animalLocation: 'Canil Municipal', animalVaccines: [{name:'Raiva', date:'2024-02-14'}], adopterName: 'Sofia Mendes', adopterBI: '87654321',  adopterNIF: '987654321', adopterPhone: '936987654', adopterAddress: 'Av. Central, 45', adopterPostalCode: '4750-456', adopterParish: 'Gilmonde', adopterMunicipality: 'Barcelos', adopterEmail: 'sofia@email.com', adoptionDate: '2024-09-20', observations: '', status: 'Em processo' },
-    { id: 'ad3', animalId: 'a8', animalName: 'Trovão', animalSpecies: 'Cão', animalSex: 'Macho',  animalBirthDate: '2021-09-01', animalColor: 'Preto/Castanho', animalFurType: 'Curto', animalMicrochip: '941000024501240', animalSterilized: 'Sim', animalBehavior: 'Enérgico', animalHealthBulletin: 'Saudável', animalVetHistory: '', animalLocation: 'Canil Municipal', animalVaccines: [{name:'Raiva', date:'2024-05-03'}], adopterName: 'Rui Oliveira',  adopterBI: '11223344',  adopterNIF: '112233445', adopterPhone: '961122334', adopterAddress: 'Travessa do Pinheiro, 3', adopterPostalCode: '4750-789', adopterParish: 'Ucha', adopterMunicipality: 'Barcelos', adopterEmail: '', adoptionDate: '2025-01-10', observations: 'Aguarda confirmação.', status: 'Em processo' }
-];
+    const demoAdoptions = [
+        { id: 'ad1', animalId: 'a5', animalName: 'Luna',  animalSpecies: 'Gato', animalSex: 'Fêmea',  animalBirthDate: '2020-05-12', animalColor: 'Preto',  animalFurType: 'Curto', animalMicrochip: '941000024501238', animalSterilized: 'Sim', animalBehavior: 'Sociável', animalHealthBulletin: 'Saudável', animalVetHistory: '', animalLocation: '', animalVaccines: [{name:'Calicivírus', date:'2024-04-20'}], adopterName: 'Pedro Rocha',  adopterBI: '12345678',  adopterNIF: '234567890', adopterPhone: '912345678', adopterAddress: 'Rua das Flores, 12', adopterPostalCode: '4750-123', adopterParish: 'Barcelos', adopterMunicipality: 'Barcelos', adopterEmail: 'pedro@email.com', adoptionDate: '2024-06-15', observations: 'Animal entregue com boletim.', status: 'Concluída' },
+        { id: 'ad2', animalId: 'a3', animalName: 'Bolinha', animalSpecies: 'Cão', animalSex: 'Fêmea', animalBirthDate: '2019-11-05', animalColor: 'Branco', animalFurType: 'Longo', animalMicrochip: '941000024501236', animalSterilized: 'Sim', animalBehavior: 'Tímida mas afectuosa', animalHealthBulletin: 'Ligeiro excesso de peso', animalVetHistory: 'Dieta prescrita', animalLocation: 'Canil Municipal', animalVaccines: [{name:'Raiva', date:'2024-02-14'}], adopterName: 'Sofia Mendes', adopterBI: '87654321',  adopterNIF: '987654321', adopterPhone: '936987654', adopterAddress: 'Av. Central, 45', adopterPostalCode: '4750-456', adopterParish: 'Gilmonde', adopterMunicipality: 'Barcelos', adopterEmail: 'sofia@email.com', adoptionDate: '2024-09-20', observations: '', status: 'Em processo' },
+        { id: 'ad3', animalId: 'a8', animalName: 'Trovão', animalSpecies: 'Cão', animalSex: 'Macho',  animalBirthDate: '2021-09-01', animalColor: 'Preto/Castanho', animalFurType: 'Curto', animalMicrochip: '941000024501240', animalSterilized: 'Sim', animalBehavior: 'Enérgico', animalHealthBulletin: 'Saudável', animalVetHistory: '', animalLocation: 'Canil Municipal', animalVaccines: [{name:'Raiva', date:'2024-05-03'}], adopterName: 'Rui Oliveira',  adopterBI: '11223344',  adopterNIF: '112233445', adopterPhone: '961122334', adopterAddress: 'Travessa do Pinheiro, 3', adopterPostalCode: '4750-789', adopterParish: 'Ucha', adopterMunicipality: 'Barcelos', adopterEmail: '', adoptionDate: '2025-01-10', observations: 'Aguarda confirmação.', status: 'Em processo' }
+    ];
 
-function loadDemoData() {
-    if (localStorage.getItem(DEMO_KEY)) return; // já foi carregado antes
-    animals   = [...demoAnimals];
-    colonies  = [...demoColonies];
-    adoptions = [...demoAdoptions];
-    persist();
-    localStorage.setItem(DEMO_KEY, '1');
-}
+    function loadDemoData() {
+        if (localStorage.getItem(DEMO_KEY)) return;
+        animals   = [...demoAnimals];
+        colonies  = [...demoColonies];
+        adoptions = [...demoAdoptions];
+        persist();
+        localStorage.setItem(DEMO_KEY, '1');
+    }
 
-function resetDemoData() {
-    localStorage.removeItem(DEMO_KEY);
-    localStorage.removeItem('animals');
-    localStorage.removeItem('colonies');
-    localStorage.removeItem('adoptions');
-    animals   = [...demoAnimals];
-    colonies  = [...demoColonies];
-    adoptions = [...demoAdoptions];
-    persist();
-    localStorage.setItem(DEMO_KEY, '1');
-    renderAnimalsTable();
-    renderColoniesTable();
-    renderAdoptionsTable();
-    updateDashboard();
-    showToast('Dados demo recarregados!', 'success');
-}
-// ── FIM DADOS DEMO ─────────────────────────────────────────────
+    function resetDemoData() {
+        localStorage.removeItem(DEMO_KEY);
+        localStorage.removeItem('animals');
+        localStorage.removeItem('colonies');
+        localStorage.removeItem('adoptions');
+        animals   = [...demoAnimals];
+        colonies  = [...demoColonies];
+        adoptions = [...demoAdoptions];
+        persist();
+        localStorage.setItem(DEMO_KEY, '1');
+        renderAnimalsTable();
+        renderColoniesTable();
+        renderAdoptionsTable();
+        updateDashboard();
+        showToast('Dados demo recarregados!', 'success');
+    }
 
     let editingAnimalId   = null;
     let editingAdoptionId = null;
@@ -1004,6 +1166,7 @@ function resetDemoData() {
 
     // ── INIT ──────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
+        initDarkMode();
         loadDemoData();
         updateDashboard();
         renderAnimalsTable();
@@ -1050,7 +1213,6 @@ function resetDemoData() {
         document.getElementById('reportAdoptions').textContent    = adopted;
     }
 
-    // ── COLONY COUNT helper ───────────────────────────────────────
     function countAnimalsInColony(colonyId) {
         return animals.filter(a => a.colonyId === colonyId).length;
     }
@@ -1061,7 +1223,6 @@ function resetDemoData() {
         return c ? c.name : '—';
     }
 
-    // ── VACCINE FIELDS ────────────────────────────────────────────
     function addVaccineField(containerId, name = '', date = '') {
         const container = document.getElementById(containerId);
         const id = 'vac_' + (vaccineCounter++);
@@ -1077,7 +1238,7 @@ function resetDemoData() {
                 <label>Data</label>
                 <input type="date" class="vaccine-date" value="${date}">
             </div>
-            <button type="button" class="btn-remove" onclick="document.getElementById('${id}').remove()">✕ Remover</button>
+            <button type="button" class="btn-remove" onclick="document.getElementById('${id}').remove()">Remover</button>
         `;
         container.appendChild(div);
     }
@@ -1100,102 +1261,94 @@ function resetDemoData() {
     }
 
     function viewColonyInfo(id) {
-    const c = colonies.find(x => x.id === id);
-    const animalsInColony = animals.filter(a => a.colonyId === id);
+        const c = colonies.find(x => x.id === id);
+        const animalsInColony = animals.filter(a => a.colonyId === id);
+        const total       = animalsInColony.length;
+        const machos      = animalsInColony.filter(a => a.sex === 'Macho').length;
+        const femeas      = animalsInColony.filter(a => a.sex === 'Fêmea').length;
+        const esteriliz   = animalsInColony.filter(a => a.sterilized === 'Sim').length;
+        const semMicrochip = animalsInColony.filter(a => !a.microchip).length;
 
-    // Estatísticas rápidas
-    const total       = animalsInColony.length;
-    const machos      = animalsInColony.filter(a => a.sex === 'Macho').length;
-    const femeas      = animalsInColony.filter(a => a.sex === 'Fêmea').length;
-    const esteriliz   = animalsInColony.filter(a => a.sterilized === 'Sim').length;
-    const semMicrochip = animalsInColony.filter(a => !a.microchip).length;
-
-    // Tabela de animais
-    let animaisHTML = '';
-    if (animalsInColony.length === 0) {
-        animaisHTML = '<p style="color:#888;font-style:italic;">Nenhum animal associado a esta colónia.</p>';
-    } else {
-        animaisHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Espécie</th>
-                        <th>Sexo</th>
-                        <th>Microchip</th>
-                        <th>Esterilizado</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${animalsInColony.map(a => `
+        let animaisHTML = '';
+        if (animalsInColony.length === 0) {
+            animaisHTML = '<p style="color:#888;font-style:italic;">Nenhum animal associado a esta colónia.</p>';
+        } else {
+            animaisHTML = `
+                <table>
+                    <thead>
                         <tr>
-                            <td>${a.name}</td>
-                            <td>${a.species}</td>
-                            <td>${a.sex}</td>
-                            <td>${a.microchip || '—'}</td>
-                            <td>${a.sterilized || '—'}</td>
-                            <td>
-                                <button class="btn btn-small btn-primary"
-                                    onclick="closeColonyInfoModal(); viewAnimalInfo('${a.id}')">
-                                    Ver Animal
-                                </button>
-                            </td>
+                            <th>Nome</th>
+                            <th>Espécie</th>
+                            <th>Sexo</th>
+                            <th>Microchip</th>
+                            <th>Esterilizado</th>
+                            <th>Ações</th>
                         </tr>
-                    `).join('')}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        ${animalsInColony.map(a => `
+                            <tr>
+                                <td>${a.name}</td>
+                                <td>${a.species}</td>
+                                <td>${a.sex}</td>
+                                <td>${a.microchip || '—'}</td>
+                                <td>${a.sterilized || '—'}</td>
+                                <td>
+                                    <button class="btn btn-small btn-primary"
+                                        onclick="closeColonyInfoModal(); viewAnimalInfo('${a.id}')">
+                                        Ver Animal
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        document.getElementById('colonyInfoTitle').textContent = `Colónia: ${c.name}`;
+        document.getElementById('colonyInfoContent').innerHTML = `
+            <div class="info-grid" style="margin-bottom:20px;">
+                <div class="info-item"><strong>Nome</strong>${c.name}</div>
+                <div class="info-item"><strong>Zona</strong>${c.zone}</div>
+                <div class="info-item"><strong>Responsável</strong>${c.responsible || '—'}</div>
+                <div class="info-item"><strong>Observações</strong>${c.notes || '—'}</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;">
+                <div class="stat-card" style="padding:15px;">
+                    <h3>Total</h3>
+                    <div class="number" style="font-size:24px;">${total}</div>
+                </div>
+                <div class="stat-card" style="padding:15px;">
+                    <h3>Machos</h3>
+                    <div class="number" style="font-size:24px;">${machos}</div>
+                </div>
+                <div class="stat-card" style="padding:15px;">
+                    <h3>Fêmeas</h3>
+                    <div class="number" style="font-size:24px;">${femeas}</div>
+                </div>
+                <div class="stat-card" style="padding:15px;">
+                    <h3>Esterilizados</h3>
+                    <div class="number" style="font-size:24px;">${esteriliz}</div>
+                </div>
+                <div class="stat-card" style="padding:15px;">
+                    <h3>Sem Microchip</h3>
+                    <div class="number" style="font-size:24px;color:var(--color-warning);">${semMicrochip}</div>
+                </div>
+            </div>
+
+            <h3 style="color:var(--color-primary);margin-bottom:12px;">Animais nesta Colónia</h3>
+            ${animaisHTML}
         `;
+
+        document.getElementById('colonyInfoModal').style.display = 'block';
     }
-//Info colonia
-    document.getElementById('colonyInfoTitle').textContent = `Colónia: ${c.name}`;
-    document.getElementById('colonyInfoContent').innerHTML = `
-        <!-- Dados da Colónia -->
-        <div class="info-grid" style="margin-bottom:20px;">
-            <div class="info-item"><strong>Nome</strong>${c.name}</div>
-            <div class="info-item"><strong>Zona</strong>${c.zone}</div>
-            <div class="info-item"><strong>Responsável</strong>${c.responsible || '—'}</div>
-            <div class="info-item"><strong>Observações</strong>${c.notes || '—'}</div>
-        </div>
 
-        <!-- Estatísticas -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;">
-            <div class="stat-card" style="padding:15px;">
-                <h3>Total</h3>
-                <div class="number" style="font-size:24px;">${total}</div>
-            </div>
-            <div class="stat-card" style="padding:15px;">
-                <h3>Machos</h3>
-                <div class="number" style="font-size:24px;">${machos}</div>
-            </div>
-            <div class="stat-card" style="padding:15px;">
-                <h3>Fêmeas</h3>
-                <div class="number" style="font-size:24px;">${femeas}</div>
-            </div>
-            <div class="stat-card" style="padding:15px;">
-                <h3>Esterilizados</h3>
-                <div class="number" style="font-size:24px;">${esteriliz}</div>
-            </div>
-            <div class="stat-card" style="padding:15px;">
-                <h3>Sem Microchip</h3>
-                <div class="number" style="font-size:24px;color:var(--color-warning);">${semMicrochip}</div>
-            </div>
-        </div>
+    function closeColonyInfoModal() {
+        document.getElementById('colonyInfoModal').style.display = 'none';
+    }
 
-        <!-- Lista de animais -->
-        <h3 style="color:var(--color-primary);margin-bottom:12px;">Animais nesta Colónia</h3>
-        ${animaisHTML}
-    `;
-
-    document.getElementById('colonyInfoModal').style.display = 'block';
-}
-
-function closeColonyInfoModal() {
-    document.getElementById('colonyInfoModal').style.display = 'none';
-}
-
-
-    // ── COLONY DROPDOWN helper ────────────────────────────────────
     function populateColonyDropdown(selectId, selectedId = '') {
         const sel = document.getElementById(selectId);
         sel.innerHTML = '<option value="">Sem colónia</option>';
@@ -1208,7 +1361,6 @@ function closeColonyInfoModal() {
         });
     }
 
-    // ── ANIMAL MODAL ──────────────────────────────────────────────
     function openAddAnimalModal() {
         editingAnimalId = null;
         document.getElementById('animalModalTitle').textContent = 'Adicionar Animal';
@@ -1237,7 +1389,6 @@ function closeColonyInfoModal() {
         const microchip  = document.getElementById('animalMicrochip').value.trim();
         const colonyId   = document.getElementById('animalColonyId').value;
 
-        // Microchip único
         if (microchip) {
             const duplicate = animals.find(a => a.microchip === microchip && a.id !== editingAnimalId);
             if (duplicate) {
@@ -1246,7 +1397,6 @@ function closeColonyInfoModal() {
             }
         }
 
-        // Determinar status
         let status = 'Disponível';
         if (editingAnimalId) {
             const existing = animals.find(a => a.id === editingAnimalId);
@@ -1255,7 +1405,7 @@ function closeColonyInfoModal() {
         if (colonyId) status = 'Colónia';
         if (editingAnimalId) {
             const existing = animals.find(a => a.id === editingAnimalId);
-            if (existing && existing.status === 'Adotado') status = 'Adotado'; // adotado prevalece
+            if (existing && existing.status === 'Adotado') status = 'Adotado';
         }
 
         const id = editingAnimalId || Date.now().toString();
@@ -1291,7 +1441,7 @@ function closeColonyInfoModal() {
         persist();
         closeAnimalModal();
         renderAnimalsTable();
-        renderColoniesTable(); // recalcula contagem
+        renderColoniesTable();
         updateDashboard();
         showToast('Animal guardado com sucesso!', 'success');
     }
@@ -1348,15 +1498,15 @@ function closeColonyInfoModal() {
             sterilHTML = `<br><strong>Esterilização:</strong> ${sh.date || '—'} — ${sh.vet || ''} ${sh.notes ? '(' + sh.notes + ')' : ''}`;
         }
 
-            let dewormHTML = '';
-            if (a.dewormingHistory && a.dewormingHistory.length > 0) {
-                const dh = a.dewormingHistory;
-                dewormHTML = `<ul style="margin:4px 0 0 16px;">` +
-                    dh.map(d => `<li>${d.date} — ${d.product || 'produto não indicado'}${d.nextDate ? ' | próx: ' + d.nextDate : ''}</li>`).join('') +
-                    '</ul>';
-            }
+        let dewormHTML = '';
+        if (a.dewormingHistory && a.dewormingHistory.length > 0) {
+            const dh = a.dewormingHistory;
+            dewormHTML = `<ul style="margin:4px 0 0 16px;">` +
+                dh.map(d => `<li>${d.date} — ${d.product || 'produto não indicado'}${d.nextDate ? ' | próx: ' + d.nextDate : ''}</li>`).join('') +
+                '</ul>';
+        }
 
-            document.getElementById('animalInfoContent').innerHTML = `
+        document.getElementById('animalInfoContent').innerHTML = `
             <div class="info-grid">
                 <div class="info-item"><strong>Nome</strong>${a.name}</div>
                 <div class="info-item"><strong>Espécie</strong>${a.species}</div>
@@ -1376,7 +1526,7 @@ function closeColonyInfoModal() {
                 <div class="info-item"><strong>Vacinas</strong>${vaccinesHTML || '—'}</div>  
                 <div class="info-item">${sterilHTML || '—'}</div>
                 <div class="info-item"><strong>Desparasitações</strong>${dewormHTML || '—'}</div>
-                </div>
+            </div>
         `;
         document.getElementById('animalInfoModal').style.display = 'block';
     }
@@ -1385,7 +1535,6 @@ function closeColonyInfoModal() {
         document.getElementById('animalInfoModal').style.display = 'none';
     }
 
-    // ── RENDER ANIMALS TABLE ──────────────────────────────────────
     function buildAnimalRow(a) {
         const colony = getColonyName(a.colonyId);
         const badgeClass = a.status === 'Adotado' ? 'badge-info' : a.status === 'Colónia' ? 'badge-warning' : 'badge-success';
@@ -1426,7 +1575,6 @@ function closeColonyInfoModal() {
             : filtered.map(buildAnimalRow).join('');
     }
 
-    // ── STERILIZATION ─────────────────────────────────────────────
     function openSterilizationModal(id) {
         document.getElementById('sterilizationAnimalId').value = id;
         document.getElementById('sterilizationForm').reset();
@@ -1455,7 +1603,6 @@ function closeColonyInfoModal() {
         showToast('Esterilização registada!', 'success');
     }
 
-    // ── DESPARASITAÇÃO ────────────────────────────────────────────
     function openDesparasitacaoModal(id) {
         document.getElementById('DesparasitacaoAnimalId').value = id;
         document.getElementById('DesparasitacaoForm').reset();
@@ -1484,7 +1631,6 @@ function closeColonyInfoModal() {
         showToast('Desparasitação registada!', 'success');
     }
 
-    // ── COLONIES ──────────────────────────────────────────────────
     function openAddColonyModal() {
         document.getElementById('colonyForm').reset();
         document.getElementById('colonyModal').style.display = 'block';
@@ -1514,7 +1660,6 @@ function closeColonyInfoModal() {
 
     function deleteColony(id) {
         if (!confirm('Tem a certeza que deseja eliminar esta colónia?\nOs animais associados passarão a "Sem colónia".')) return;
-        // desligar animais
         animals.forEach(a => { if (a.colonyId === id) { a.colonyId = ''; if (a.status === 'Colónia') a.status = 'Disponível'; } });
         colonies = colonies.filter(c => c.id !== id);
         persist();
@@ -1544,7 +1689,6 @@ function closeColonyInfoModal() {
         `).join('');
     }
 
-    // ── ADOPTION ──────────────────────────────────────────────────
     function toggleAnimalSearch() {
         const useExisting = document.getElementById('useExistingAnimal').checked;
         const section     = document.getElementById('animalSearchSection');
@@ -1627,7 +1771,6 @@ function closeColonyInfoModal() {
         document.getElementById('adoptionVaccinesList').innerHTML = '';
     }
 
-    // Cria animal a partir do formulário de adoção
     function createAnimalFromAdoption(animalId, vaccines, adopterName) {
         const a = {
             id:            animalId,
@@ -1652,7 +1795,6 @@ function closeColonyInfoModal() {
     }
 
     function saveAdoption() {
-        // ── Validação: adotante ──────────────────────────────────
         const adopterName     = document.getElementById('adopterName').value.trim();
         const adopterBI       = document.getElementById('adopterBI').value.trim();
         const adopterNIF      = document.getElementById('adopterNIF').value.trim();
@@ -1670,7 +1812,6 @@ function closeColonyInfoModal() {
             return;
         }
 
-        // Código postal
         if (!/^\d{4}-\d{3}$/.test(adopterPostal)) {
             showToast('Código postal inválido. Formato: 0000-000', 'error');
             return;
@@ -1679,7 +1820,6 @@ function closeColonyInfoModal() {
         const vaccines    = getVaccinesFromContainer('adoptionVaccinesList');
         const microchipIn = document.getElementById('adoptionAnimalMicrochip').value.trim();
 
-        // ── Validação: animal ─────────────────────────────────────
         if (!useExisting) {
             const anName = document.getElementById('adoptionAnimalName').value.trim();
             const anSp   = document.getElementById('adoptionAnimalSpecies').value.trim();
@@ -1695,7 +1835,6 @@ function closeColonyInfoModal() {
             }
         }
 
-        // ── Determinar animalId ───────────────────────────────────
         let animalId;
 
         if (useExisting) {
@@ -1705,7 +1844,6 @@ function closeColonyInfoModal() {
                 existing.status = 'Adotado';
                 existing.owner  = adopterName;
             } else {
-                // Microchip não encontrado → criar novo
                 animalId = Date.now().toString() + '_a';
                 createAnimalFromAdoption(animalId, vaccines, adopterName);
             }
@@ -1713,7 +1851,6 @@ function closeColonyInfoModal() {
             if (microchipIn) {
                 const existing = animals.find(a => a.microchip === microchipIn);
                 if (existing) {
-                    // Reutilizar animal existente sem duplicar
                     animalId = existing.id;
                     existing.status = 'Adotado';
                     existing.owner  = adopterName;
@@ -1727,7 +1864,6 @@ function closeColonyInfoModal() {
             }
         }
 
-        // ── Criar registo de adoção ───────────────────────────────
         const adoption = {
             id:               editingAdoptionId || Date.now().toString(),
             animalId,
@@ -1810,7 +1946,6 @@ Observações: ${ad.notes || '—'}`;
         `).join('');
     }
 
-    // ── REPORTS ───────────────────────────────────────────────────
     function generateReport() {
         const type   = document.getElementById('reportType').value;
         const output = document.getElementById('reportOutput');
@@ -1836,15 +1971,12 @@ Observações: ${ad.notes || '—'}`;
         updateDashboard();
     }
 
-    // ── CLOSE MODAL ON OUTSIDE CLICK ──────────────────────────────
     window.addEventListener('click', function (e) {
         if (e.target.classList.contains('modal')) {
             e.target.style.display = 'none';
-            // limpar vacinas ao fechar
             document.getElementById('vaccinesList').innerHTML = '';
             document.getElementById('adoptionVaccinesList').innerHTML = '';
         }
-        // fechar dropdown de pesquisa de animal
         if (!e.target.closest('.animal-search-wrapper')) {
             const r = document.getElementById('animalSearchResults');
             if (r) r.classList.add('hidden');
