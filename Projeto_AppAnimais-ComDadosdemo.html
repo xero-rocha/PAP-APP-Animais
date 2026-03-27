@@ -1348,15 +1348,15 @@ function closeColonyInfoModal() {
             sterilHTML = `<br><strong>Esterilização:</strong> ${sh.date || '—'} — ${sh.vet || ''} ${sh.notes ? '(' + sh.notes + ')' : ''}`;
         }
 
-        let dewormHTML = '';
-        if (a.dewormingHistory && a.dewormingHistory.length > 0) {
-            const dh = a.dewormingHistory;
-            dewormHTML = `<br><strong>Desparasitações (${dh.length}):</strong><ul style="margin:4px 0 0 16px;">` +
-                dh.map(d => `<li>${d.date} — ${d.product || 'produto não indicado'}${d.nextDate ? ' | próx: ' + d.nextDate : ''}</li>`).join('') +
-                '</ul>';
-        }
+            let dewormHTML = '';
+            if (a.dewormingHistory && a.dewormingHistory.length > 0) {
+                const dh = a.dewormingHistory;
+                dewormHTML = `<ul style="margin:4px 0 0 16px;">` +
+                    dh.map(d => `<li>${d.date} — ${d.product || 'produto não indicado'}${d.nextDate ? ' | próx: ' + d.nextDate : ''}</li>`).join('') +
+                    '</ul>';
+            }
 
-        document.getElementById('animalInfoContent').innerHTML = `
+            document.getElementById('animalInfoContent').innerHTML = `
             <div class="info-grid">
                 <div class="info-item"><strong>Nome</strong>${a.name}</div>
                 <div class="info-item"><strong>Espécie</strong>${a.species}</div>
@@ -1370,21 +1370,13 @@ function closeColonyInfoModal() {
                 <div class="info-item"><strong>Colónia</strong>${colony}</div>
                 <div class="info-item"><strong>Local Albergue</strong>${a.location || '—'}</div>
                 <div class="info-item"><strong>Status</strong>${a.status}</div>
-            </div>
-            <div style="margin-top:16px;">
-                <strong>Comportamento:</strong> ${a.behavior || '—'}
-            </div>
-            <div style="margin-top:12px;">
-                <strong>Boletim Sanitário:</strong> ${a.healthBulletin || '—'}
-            </div>
-            <div style="margin-top:12px;">
-                <strong>Histórico Veterinário:</strong> ${a.vetHistory || '—'}
-            </div>
-            <div style="margin-top:12px;">
-                <strong>Vacinas:</strong>${vaccinesHTML}
-            </div>
-            ${sterilHTML}
-            ${dewormHTML}
+                <div class="info-item"><strong>Comportamento</strong>${a.behavior || '—'}</div>
+                <div class="info-item"><strong>Boletim Sanitário</strong>${a.healthBulletin || '—'}</div>  
+                <div class="info-item"><strong>Histórico Veterinário</strong>${a.vetHistory || '—'}</div>   
+                <div class="info-item"><strong>Vacinas</strong>${vaccinesHTML || '—'}</div>  
+                <div class="info-item">${sterilHTML || '—'}</div>
+                <div class="info-item"><strong>Desparasitações</strong>${dewormHTML || '—'}</div>
+                </div>
         `;
         document.getElementById('animalInfoModal').style.display = 'block';
     }
